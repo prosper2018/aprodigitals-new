@@ -11,22 +11,13 @@ use Yajra\DataTables\Facades\DataTables;
 
 class CommentsController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function index()
     {
         $categories = Categories::all();
         return view('comments.index', ['categories' => $categories]);
     }
 
-      /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+     
     public function viewall(Request $request)
     {
         $data = DB::table('comments')->leftJoin('blog_posts', 'blog_posts.id', '=', 'comments.comment_post_id')
@@ -34,14 +25,7 @@ class CommentsController extends Controller
 
         if ($request->ajax()) {
 
-            return Datatables::of($data)
-                ->addIndexColumn()
-                ->addColumn('checkbox', '<input type="checkbox" class="checkid" name="selected_post[]" value="{{ $id }}">')
-                // ->addColumn('posts', '<a data-id="{{ $comment_post_id }}" href="/blog/{{ $comment_post_id }}/page_1" class="edit btn btn-info btn-sm">$title</a>')
-                ->addColumn('action', '<button data-id="{{ $id }}" class="delete  btn btn-danger btn-sm" onclick="delete_comment(this)">Delete</button>')
-               
-                ->rawColumns(['action', 'checkbox'])
-                ->make(true);
+            return datatables()->of($data)->toJson();
         }
         return view('comments.index');
     }

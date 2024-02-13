@@ -13,11 +13,7 @@ use App\Http\Controllers\CategoriesController;
 class BlogPostController extends Controller
 {
 
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+  
     public function index()
     {
         if (auth()->user()) {
@@ -48,11 +44,6 @@ class BlogPostController extends Controller
     }
 
 
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function viewall(Request $request)
     {
 
@@ -63,15 +54,17 @@ class BlogPostController extends Controller
 
         if ($request->ajax()) {
 
-            // $data = BlogPost::latest()->get();
-            return Datatables::of($data)
-                ->addIndexColumn()
-                ->addColumn('checkbox', '<input type="checkbox" class="checkid" name="selected_post[]" value="{{ $id }}">')
-                ->addColumn('image', '<img class="img-responsive" width="50" height="50" src="/images/{{ $post_image }}">')
-                ->addColumn('action', '<a data-id="{{ $id }}" href="/blog/{{ $id }}/page_1" class="edit btn btn-info btn-sm">View</a>&nbsp&nbsp<a data-id="{{ $id }}" href="{{ route("blog.edit", $id ) }}" class="edit btn btn-success btn-sm">Edit</a>&nbsp&nbsp<button data-id="{{ $id }}" class="delete  btn btn-danger btn-sm" onclick="delete_post(this)">Delete</button>')
+            // // $data = BlogPost::latest()->get();
+            // return Datatables::of($data)
+            //     ->addIndexColumn()
+            //     ->addColumn('checkbox', '<input type="checkbox" class="checkid" name="selected_post[]" value="{{ $id }}">')
+            //     ->addColumn('image', '<img class="img-responsive" width="50" height="50" src="/images/{{ $post_image }}">')
+            //     ->addColumn('action', '<a data-id="{{ $id }}" href="/blog/{{ $id }}/page_1" class="edit btn btn-info btn-sm">View</a>&nbsp&nbsp<a data-id="{{ $id }}" href="{{ route("blog.edit", $id ) }}" class="edit btn btn-success btn-sm">Edit</a>&nbsp&nbsp<button data-id="{{ $id }}" class="delete  btn btn-danger btn-sm" onclick="delete_post(this)">Delete</button>')
 
-                ->rawColumns(['action', 'checkbox', 'image'])
-                ->make(true);
+            //     ->rawColumns(['action', 'checkbox', 'image'])
+            //     ->make(true);
+
+            return datatables()->of($data)->toJson();
         }
         return view('blog.view');
     }

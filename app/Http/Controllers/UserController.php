@@ -118,12 +118,7 @@ class UserController extends Controller
 
         if ($request->ajax()) {
 
-            return Datatables::of($data)
-                ->addIndexColumn()
-                ->addColumn('action', '<a data-id="{{ $id }}" href="{{ route("blog.edit", $id ) }}" class="edit btn btn-success btn-sm">Edit</a><button data-id="{{ $id }}" class="delete  btn btn-danger btn-sm" onclick="delete_post(this)">Delete</button>')
-                
-                ->rawColumns(['action'])
-                ->make(true);
+            return datatables()->of($data)->toJson();
         }
         return view('user.view');
     }

@@ -21,24 +21,14 @@ class CategoriesController extends Controller
         return view('categories.index', ['categories' => $categories]);
     }
 
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+
     public function viewall(Request $request)
     {
         $data =  Categories::all();
 
         if ($request->ajax()) {
 
-            return Datatables::of($data)
-                ->addIndexColumn()
-                ->addColumn('checkbox', '<input type="checkbox" class="checkid" name="selected_post[]" value="{{ $id }}">')
-                ->addColumn('action', '<a data-id="{{ $id }}" href="{{ route("admin.categories.edit", $id ) }}" class="edit btn btn-success btn-sm">Edit</a><button data-id="{{ $id }}" class="delete  btn btn-danger btn-sm" onclick="delete_category(this)">Delete</button>')
-
-                ->rawColumns(['action', 'checkbox'])
-                ->make(true);
+            return datatables()->of($data)->toJson();
         }
         return view('categories.index');
     }

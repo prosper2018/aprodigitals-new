@@ -152,23 +152,6 @@
   });
 </script>
 <script>
-  // function handleFileInput(inputId, previewId) {
-  //   var fileInput = document.getElementById(inputId);
-  //   var preview = document.getElementById(previewId);
-
-  //   fileInput.addEventListener('change', function(event) {
-  //     var file = event.target.files[0];
-  //     var reader = new FileReader();
-
-  //     reader.onload = function(e) {
-  //       preview.src = e.target.result;
-  //       preview.style.display = 'block';
-  //     };
-
-  //     reader.readAsDataURL(file);
-  //   });
-  // }
-
   function handleFileInput(inputId, previewId) {
     var fileInput = document.getElementById(inputId);
     var preview = document.getElementById(previewId);
@@ -258,7 +241,113 @@
 
 
 <script type="text/javascript">
-  var users_table;
+  function number_format(number, decimals = 2, decimalSeparator = '.', thousandSeparator = ',') {
+    number = parseFloat(number);
+
+    if (isNaN(number) || !isFinite(number)) {
+      return '0.00';
+    }
+
+    // Round to specified number of decimal places
+    number = number.toFixed(decimals);
+
+    // Add thousands separator
+    number = number.replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1' + thousandSeparator);
+
+    // Replace decimal separator
+    number = number.replace('.', decimalSeparator);
+
+    return number;
+  }
+
+
+  var businesses;
+  $(function() {
+
+    businesses = $('#all-businesses').DataTable({
+      responsive: true,
+      processing: true,
+      serverSide: true,
+      select: {
+        style: "os",
+        selector: "td:first-child",
+      },
+      className: "dt-body-center dt-head-center",
+      ajax: "{{ route('businesses-list') }}",
+      columns: [{
+          data: 'id',
+          name: 'business_details.id'
+        },
+        {
+          data: 'business_name',
+          name: 'business_details.business_name'
+        },
+        {
+          data: 'logo',
+          searchable: false,
+          orderable: false,
+          render: function(data, type, row) {
+            return '<img src="/assets' + row.logo + '" alt="Business Logo" width="50px" height="50px">';
+          }
+        },
+        {
+          data: 'address',
+          name: 'business_details.address'
+        },
+        {
+          data: 'description',
+          name: 'business_details.description'
+        },
+        {
+          data: 'total_staff',
+          searchable: false,
+          orderable: false,
+          render: function(data, type, row) {
+            return number_format(row.total_staff);
+          }
+        },
+        {
+          data: 'total_active_staff',
+          searchable: false,
+          orderable: false,
+          render: function(data, type, row) {
+            return number_format(row.total_active_staff);
+          }
+        },
+        {
+          data: 'total_salary',
+          searchable: false,
+          orderable: false,
+          render: function(data, type, row) {
+            return number_format(row.total_salary);
+          }
+        },
+        {
+          data: 'is_deleted',
+          searchable: false,
+          orderable: false,
+          render: function(data, type, row) {
+            return (row.is_deleted == 1) ? '<span class="badge bg-danger">Inactive</span>' : '<span class="badge bg-success">Active</span>';
+          }
+        },
+        {
+          data: 'created_at',
+          name: 'business_details.created_at'
+        },
+        {
+          data: null,
+          searchable: false,
+          orderable: false,
+          render: function(data, type, row) {
+            return '<a class="btn btn-success" href="/blog/' + row.id + '/edit">Edit</a>' +
+              '<button class="btn btn-danger" onclick="deleteRecord(' + row.id + ')">Delete</button>';
+          }
+        }
+      ]
+    });
+  });
+
+
   $(function() {
 
     users_table = $('.allusers').DataTable({
@@ -272,7 +361,7 @@
       className: "dt-body-center dt-head-center",
       ajax: "{{ route('admin.users') }}",
       columns: [{
-          data: 'DT_RowIndex',
+          data: 'id',
           name: 'users.id'
         },
         {
@@ -308,8 +397,12 @@
           name: 'users.login_status'
         },
         {
-          data: 'action',
-          name: 'action'
+          data: null,
+          searchable: false,
+          orderable: false,
+          render: function(data, type, row) {
+            return '<a data-id="' + row.id + '" href="/blog/' + row.id + '/edit" class="edit btn btn-success btn-sm">Edit</a><button data-id="{{ "' + row.id + '"}}" class="delete  btn btn-danger btn-sm" onclick="delete_post(this)">Delete</button>';
+          }
         },
         {
           data: 'created_at',
@@ -337,12 +430,14 @@
       className: "dt-body-center dt-head-center",
       ajax: "{{ route('admin.categories') }}",
       columns: [{
-          data: 'DT_RowIndex',
+          data: 'id',
           name: 'categories.id'
         },
         {
-          data: 'checkbox',
-          name: 'categories.id',
+          data: 'id',
+          render: function(data, type, row) {
+            return '<input type="checkbox" class="checkid" name="selected_post[]" value="' + row.id + '">';
+          },
           searchable: false,
           orderable: false
         },
@@ -355,8 +450,12 @@
           name: 'comments.created_at'
         },
         {
-          data: 'action',
-          name: 'action'
+          data: null,
+          searchable: false,
+          orderable: false,
+          render: function(data, type, row) {
+            return '<a data-id="' + row.id + '" href="/admin/' + row.id + '/categories" class="edit btn btn-success btn-sm">Edit</a><button data-id="{{ "' + row.id + '"}}" class="delete  btn btn-danger btn-sm" onclick="delete_post(this)">Delete</button>';
+          }
         },
       ]
     });
@@ -378,12 +477,14 @@
       className: "dt-body-center dt-head-center",
       ajax: "{{ route('admin.comments') }}",
       columns: [{
-          data: 'DT_RowIndex',
+          data: 'id',
           name: 'comments.id'
         },
         {
-          data: 'checkbox',
-          name: 'comments.id',
+          data: 'id',
+          render: function(data, type, row) {
+            return '<input type="checkbox" class="checkid" name="selected_post[]" value="' + row.id + '">';
+          },
           searchable: false,
           orderable: false
         },
@@ -415,8 +516,12 @@
           name: 'comments.created_at'
         },
         {
-          data: 'action',
-          name: 'action'
+          data: null,
+          searchable: false,
+          orderable: false,
+          render: function(data, type, row) {
+            return '<button data-id="' + row.id + '" class="delete  btn btn-danger btn-sm" onclick="delete_comment(this)">Delete</button>';
+          }
         },
       ]
     });
@@ -439,12 +544,14 @@
       className: "dt-body-center dt-head-center",
       ajax: "{{ route('admin.blog') }}",
       columns: [{
-          data: 'DT_RowIndex',
+          data: 'id',
           name: 'blog_posts.id'
         },
         {
-          data: 'checkbox',
-          name: 'blog_posts.id',
+          data: 'id',
+          render: function(data, type, row) {
+            return '<input type="checkbox" class="checkid" name="selected_post[]" value="' + row.id + '">';
+          },
           searchable: false,
           orderable: false
         },
@@ -466,8 +573,12 @@
           name: 'blog_posts.post_status'
         },
         {
-          data: 'image',
-          name: 'blog_posts.post_image'
+          data: 'post_image',
+          searchable: false,
+          orderable: false,
+          render: function(data, type, row) {
+            return '<img src="/images/' + row.post_image + '" alt="Post Image" width="50px" height="50px">';
+          }
         },
         {
           data: 'post_tags',
@@ -486,8 +597,12 @@
           name: 'blog_posts.created_at'
         },
         {
-          data: 'action',
-          name: 'action'
+          data: null,
+          searchable: false,
+          orderable: false,
+          render: function(data, type, row) {
+            return '<a data-id="' + row.id + '" href="/blog/' + row.id + '/page_1" class="edit btn btn-info btn-sm">View</a>&nbsp&nbsp<a data-id="' + row.id + '" href="/blog/' + row.id + '/edit" class="edit btn btn-success btn-sm">Edit</a>&nbsp&nbsp<button data-id="' + row.id + '" class="delete  btn btn-danger btn-sm" onclick="delete_post(this)">Delete</button>';
+          }
         },
       ]
     });
