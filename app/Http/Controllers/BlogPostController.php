@@ -46,46 +46,24 @@ class BlogPostController extends Controller
 
     public function viewall(Request $request)
     {
-
-        // $data = BlogPost::join('categories', 'categories.id', '=', 'blog_posts.post_category_id')
-        //                     ->join('users', 'users.id', '=', 'blog_posts.author_id')->get(['blog_posts.id', 'blog_posts.title', 'blog_posts.created_at', 'blog_posts.post_image', 'blog_posts.post_tags', 'blog_posts.post_comment_count', 'blog_posts.post_status', 'blog_posts.post_views_count', 'categories.cat_title',  DB::raw("CONCAT(users.firstname, ' ', users.lastname) AS name"]);
         $data = DB::table('blog_posts')->leftJoin('categories', 'categories.id', '=', 'blog_posts.post_category_id')
             ->leftJoin('users', 'users.id', '=', 'blog_posts.author_id')->select(['blog_posts.id', 'blog_posts.title', 'blog_posts.created_at', 'blog_posts.post_image', 'blog_posts.post_tags', 'blog_posts.post_comment_count', 'blog_posts.post_status', 'blog_posts.post_views_count', 'categories.cat_title', DB::raw("CONCAT(users.firstname, ' ', users.lastname) AS name")]);
 
         if ($request->ajax()) {
-
-            // // $data = BlogPost::latest()->get();
-            // return Datatables::of($data)
-            //     ->addIndexColumn()
-            //     ->addColumn('checkbox', '<input type="checkbox" class="checkid" name="selected_post[]" value="{{ $id }}">')
-            //     ->addColumn('image', '<img class="img-responsive" width="50" height="50" src="/images/{{ $post_image }}">')
-            //     ->addColumn('action', '<a data-id="{{ $id }}" href="/blog/{{ $id }}/page_1" class="edit btn btn-info btn-sm">View</a>&nbsp&nbsp<a data-id="{{ $id }}" href="{{ route("blog.edit", $id ) }}" class="edit btn btn-success btn-sm">Edit</a>&nbsp&nbsp<button data-id="{{ $id }}" class="delete  btn btn-danger btn-sm" onclick="delete_post(this)">Delete</button>')
-
-            //     ->rawColumns(['action', 'checkbox', 'image'])
-            //     ->make(true);
 
             return datatables()->of($data)->toJson();
         }
         return view('blog.view');
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+ 
     public function create()
     {
         $categories = Categories::all();
         return view('blog.create', ['categories' => $categories,]);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
+ 
     public function store(Request $request)
     {
         $request->validate([

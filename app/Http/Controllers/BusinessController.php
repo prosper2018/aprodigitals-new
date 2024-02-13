@@ -52,17 +52,25 @@ class BusinessController extends Controller
     public function viewAllBusiness(Request $request)
     {
         $data = BusinessDetails::query()
-            ->select('business_details.*', DB::raw('(SELECT COUNT(business_id) FROM users WHERE users.business_id = business_details.id) AS total_staff'), DB::raw('(SELECT COUNT(business_id) FROM users WHERE users.business_id = business_details.id AND status NOT IN(1) AND is_deleted NOT IN(1)) AS total_active_staff'), DB::raw('(SELECT SUM(current_salary) FROM users WHERE users.business_id = business_details.id AND status NOT IN(1) AND is_deleted NOT IN(1)) AS total_salary'))
-            ->get();
+            ->select('business_details.*', DB::raw('(SELECT COUNT(business_id) FROM users WHERE users.business_id = business_details.id) AS total_staff'), DB::raw('(SELECT COUNT(business_id) FROM users WHERE users.business_id = business_details.id AND status NOT IN(1) AND is_deleted NOT IN(1)) AS total_active_staff'), DB::raw('(SELECT SUM(current_salary) FROM users WHERE users.business_id = business_details.id AND status NOT IN(1) AND is_deleted NOT IN(1)) AS total_salary'));
 
         // Apply search filter if search term is provided
-        // if ($request->has('search')) {
-        //     $search = $request->input('search');
-        //     $data->where('column_name', 'like', "%$search%");
-        // }
+        if ($request->has('business_name')) {
+            $business_name = $request->input('business_name');
+            // Apply filter to query
+            $data->where('business_name', 'like', '%' . $business_name . '%');
+        }
 
-        // Apply filters if filter parameters are provided
-        // Example: $request->input('filter_column') 
+        if ($request->has('status')) {
+            $status_value = $request->input('status');
+            if ($status_value == 'active') {
+                $data->where('is_deleted', '!=', '1');
+            } else if ($status_value == 'inactive') {
+                $data->where('is_deleted', '=', '1');
+            }
+        }
+
+        $data->get();
 
         return datatables()->of($data)->toJson();
     }

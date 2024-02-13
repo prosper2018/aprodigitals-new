@@ -273,7 +273,13 @@
         selector: "td:first-child",
       },
       className: "dt-body-center dt-head-center",
-      ajax: "{{ route('businesses-list') }}",
+      ajax: {
+        url: "{{ route('businesses-list') }}",
+        data: function(d) {
+          d.business_name = $('#business_name').val();
+          d.status = $('#status').val();
+        }
+      },
       columns: [{
           data: 'id',
           name: 'business_details.id'
@@ -345,6 +351,10 @@
         }
       ]
     });
+  });
+
+  $('#apply_business_filter').click(function() {
+    businesses.ajax.reload(); // Reload the DataTable with the new filter
   });
 
 

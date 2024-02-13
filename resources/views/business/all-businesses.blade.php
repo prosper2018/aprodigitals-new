@@ -1,12 +1,77 @@
 @extends('layouts.admin')
 @section('content')
+<style>
+    .filter_container {
+        background-color: #e8e8ff;
+        border-radius: 8px;
+        padding: 20px;
+        margin-top: 30px;
+    }
 
+    .row {
+        margin-bottom: 20px;
+    }
+
+    .filter-input {
+        height: 40px;
+        background-color: white;
+        border: 2px solid white;
+    }
+
+    .filter-btn {
+        background-color: #80CECA;
+        color: white;
+        border: 3px solid #80CECA;
+        border-radius: 50px;
+        padding: 8px 31px;
+    }
+
+    @media (max-width: 767px) {
+
+        .filter-input,
+        .filter-btn {
+            width: 100%;
+        }
+    }
+</style>
 <div class="wrapper">
     @include('layouts.partials.sidebar')
     <div class="main">
 
         @include('layouts.partials.top_menubar')
         <div class="container" style="padding-top: 40px !important;">
+            <div class="filter_container mb-4">
+                <div class="row">
+                    <div class="col-md-12 mb-4">
+                        <h1 class="job-heading">Filters</h1>
+                    </div>
+                </div>
+                <div class="row align-items-center">
+                    <div class="col-md-3">
+                        <input class="filter-input" id="business_name" placeholder="Search by name" name="business_name" value="">
+                    </div>
+                    <div class="col-md-3">
+                        <select class="filter-input" name="job_country" id="location">
+                            <option value="">Filter by country</option>
+                            <option value="1077">afghai</option>
+                            <option value="3">Afghanistan</option>
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <select class="filter-input" name="status" id="status">
+                            <option value="">Filter by status</option>
+                            <option value="all">ALL</option>
+                            <option value="active">Active</option>
+                            <option value="inactive">Inactive</option>
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <button class="filter-btn" id="apply_business_filter">Search</button>
+                    </div>
+                </div>
+            </div>
+
+
             <div class="card">
                 <div class="card-header">
                     <h1 class="text-bold">All Registered Businesses</h1>
