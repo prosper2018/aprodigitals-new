@@ -24,7 +24,7 @@ class BusinessController extends Controller
         $validator = Validator::make($request->all(), [
             'business_name' => ['required', 'unique:business_details'],
             'address' => 'required',
-            'logo' => 'required'
+            'logo' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048'
         ]);
 
         if ($validator->fails()) {
@@ -40,7 +40,10 @@ class BusinessController extends Controller
                 'business_name' => $request->business_name,
                 'address' => $request->address,
                 'description' => $request->description,
-                'logo' => $path
+                'logo' => $path,
+                'posted_userid' => auth()->user()->id,
+                'posted_user' => auth()->user()->username,
+                'posted_ip' => $request->ip(),
             ]);
 
             return redirect()->route('business.form')->with('success', 'Business Created Successfully!!');
@@ -73,5 +76,73 @@ class BusinessController extends Controller
         $data->get();
 
         return datatables()->of($data)->toJson();
+    }
+
+    public function edit(BusinessDetails $business)
+    {
+        return view('business.update', [
+            'business' => $business
+        ]); //returns the edit view with the post
+    }
+
+    public function update(Request $request, $id)
+    {
+        $post = BusinessDetails::find($id);
+        if ($request->has('logo')) {
+            $validator = Validator::make($request->all(), [
+                'logo' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048'
+            ]);
+
+            if ($validator->fails()) {
+                return redirect()->route('business.form')->withErrors($validator->errors());
+            }
+
+            $imageName = str_replace(' ', '_', $request->business_name) . $request->logo->extension();
+
+            $request->logo->move(public_path('photos'), $imageName);
+        } else {
+            $imageName = $post->logo;
+        }
+
+        $validator = Validator::make($request->all(), [
+            'business_name' => 'required|unique:business_details,business_name,' . $id,
+            'address' => 'required',
+        ]);
+    
+        if ($validator->fails()) {
+            return redirect()->back()->withErrors($validator)->withInput();
+        }
+    
+
+        $update = $post->update([
+            'business_name' => $request->business_name,
+            'address' => $request->address,
+            'description' => $request->description,
+            'logo' => $imageName,
+        ]);
+
+        if ($update > 0) {
+            return redirect('businesses/' . $id . '/edit')->with('success', 'Business Details updated successfully!');
+        } else {
+            return redirect('businesses/' . $id . '/edit')->with('error', 'Business Details could not be updated at the momment!');
+        }
+    }
+
+    public function delete(Request $request)
+    {
+        $id = $request->id;
+        $delete = BusinessDetails::where('id', $id)->delete();
+
+        if ($delete > 0) {
+            return response()->json([
+                "response_code" => 0,
+                "response_message" => "Selected record deleted successfully"
+            ]);
+        } else {
+            return response()->json([
+                "response_code" => 1,
+                "response_message" => "Action could not be Applied to selected record!"
+            ]);
+        }
     }
 }

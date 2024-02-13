@@ -345,8 +345,8 @@
           searchable: false,
           orderable: false,
           render: function(data, type, row) {
-            return '<a class="btn btn-success" href="/blog/' + row.id + '/edit">Edit</a>' +
-              '<button class="btn btn-danger" onclick="deleteRecord(' + row.id + ')">Delete</button>';
+            return '<a class="btn btn-success" href="/businesses/' + row.id + '/edit">Edit</a>' +
+              '<button data-id="' + row.id + '" class="btn btn-danger" onclick="delete_business(this)">Delete</button>';
           }
         }
       ]
@@ -750,6 +750,56 @@
             error: function(response) {
               $.unblockUI();
               categories_table.draw();
+              Swal.fire(
+                "Error",
+                "Action could not be due to unknown error",
+                "error"
+              );
+
+            },
+          });
+        } else {}
+      });
+    });
+  }
+
+
+  function delete_business(id) {
+
+    jQuery(function validation() {
+      Swal.fire({
+        title: "Delete?",
+        text: "By clicking OK, The selected business will be Deleted",
+        icon: "warning",
+        buttons: true,
+        deleteMode: true,
+      }).then((willDelete) => {
+        if (willDelete.isConfirmed) {
+          $.ajax({
+            url: "{{ route('businesses.delete') }}",
+            type: "POST",
+            data: {
+              _token: "{{ csrf_token() }}",
+              id: id.dataset.id
+            },
+            dataType: "json",
+            beforeSend: function() {
+              $.blockUI({
+                message: '<img src="/assets/img/loading.gif" alt=""/>&nbsp;&nbsp;processing request please wait . . .',
+              });
+            },
+            success: function(response) {
+              businesses.ajax.reload();
+              $.unblockUI();
+              if (response.response_code == 0) {
+                Swal.fire("Success", response.response_message, "success");
+              } else {
+                Swal.fire("Warning", response.response_message, "warning");
+              }
+            },
+            error: function(response) {
+              $.unblockUI();
+              businesses.ajax.reload()
               Swal.fire(
                 "Error",
                 "Action could not be due to unknown error",

@@ -66,10 +66,12 @@ Route::middleware('system_admin')->group(function () {
 
    Route::get('/businesses', [BusinessController::class, 'index'])->name('business.form');
    Route::post('/businesses/create', [BusinessController::class, 'storeBusiness'])->name('business-setup');
-   Route::get('/businesses/view', [\App\Http\Controllers\UserController::class, 'view']);
+   Route::get('/businesses/view', [BusinessController::class, 'view']);
    Route::get('/manage/businesses', [BusinessController::class, 'view'])->name('manage-businesses');
    Route::get('/businesses/all', [BusinessController::class, 'viewAllBusiness'])->name('businesses-list');
-   Route::get('/businesses/{business}/edit', [\App\Http\Controllers\BlogPostController::class, 'edit'])->name('businesses.edit');; //shows edit post form
+   Route::get('/businesses/{business}/edit', [BusinessController::class, 'edit'])->name('businesses.edit'); //shows edit form
+   Route::put('/businesses/{id}', [BusinessController::class, 'update'])->name('businesses.update');
+   Route::post('/businesses/delete', [BusinessController::class, 'delete'])->name('businesses.delete');
 });
 
 Route::get('login', [LoginController::class, 'index'])->name('login');

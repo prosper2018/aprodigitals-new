@@ -77,7 +77,6 @@ class BlogPostController extends Controller
         $newPost = BlogPost::create([
             'title' => $request->post_title,
             'post_category_id' => $request->post_category_id,
-            'author_id' => 1,
             // 'author_id' => $request->author_id,
             'post_author' => $request->post_author,
             'post_content_excerpt' => $request->post_content_excerpt,
@@ -88,7 +87,7 @@ class BlogPostController extends Controller
             // 'post_comment_count' => $request->post_comment_count,
             'post_status' => $request->post_status,
             // 'author_id' => 1
-            // 'user_id' => auth()->user()->id
+            'author_id' => auth()->user()->id
         ]);
 
         return redirect('/blog/' . $newPost->id . "/page_1");

@@ -84,7 +84,7 @@
                                         <div class="form-group col-md-6 col-sm-12 p-3">
                                             <label class="form-label">Business Logo</label>
                                             <input type="file" name="logo" id="logo" onchange="handleFileInput('logo', 'preview');">
-                                            <img src="#" id="preview" alt="Logo Preview" width="100px" height="100px" style="display: none;">
+                                            <img src="" id="preview" alt="Logo Preview" width="100px" height="100px" style="display: none;">
                                             @if($errors->has('logo')) <span class="text-danger">{{ $errors->first('logo') }}</span> @endif
                                         </div>
 
