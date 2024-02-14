@@ -14,6 +14,8 @@ use App\Models\Comments;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Password;
+use App\Events\UserLoggedIn;
+
 
 class LoginController extends Controller
 {
@@ -291,6 +293,7 @@ class LoginController extends Controller
         }
 
         if ($code == '200') {
+            event(new UserLoggedIn(auth()->user()));
             return redirect()->intended('dashboard')
                 ->withSuccess('Signed in');
         } elseif ($code == '400') {
