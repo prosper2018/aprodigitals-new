@@ -31,7 +31,7 @@
     <div class="container">
 
         <!-- Logo -->
-        <img src="{{ url('/assets/img/logo-removebg-preview.png') }}" alt="{{ config('app.name') }} Logo" style="display: block; margin: 0 auto; max-width: 100%;">
+        <img src="{{ url('/assets/img/logo-removebg-preview.png') }}" alt="{{ config('app.name') }} Logo" width="50" height="50" style="display: block; margin: 0 auto; max-width: 100%;">
 
         <!-- Header -->
         <header style="background-color: #191970; color: white !important; padding: 10px;">
