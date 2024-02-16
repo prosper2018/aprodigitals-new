@@ -32,6 +32,71 @@
 
 
 <script>
+  function getBankAccount() {
+    var bank_code = $("select#bank_code").children("option:selected").val(),
+      bank_account_no = $("#bank_account_no").val();
+    if (bank_code != "" && bank_account_no != "") {
+      var data = {
+        bank_code: bank_code,
+        bank_account_no: bank_account_no,
+      };
+      $("#spinner").show();
+      $.ajax({
+        url: "{{ route('api.account_validation') }}",
+        type: "get",
+        data: data,
+        dataType: "json",
+        success: function(data) {
+          $("#spinner").hide();
+          if (data.response_code == 0) {
+            $("#bank_account_name").prop(
+              "value",
+              data.response_message
+            );
+          } else {
+            Swal.fire("Attention!", data.response_message, "info");
+          }
+        },
+        error: function() {
+          $("#spinner").hide();
+          Swal.fire(
+            "Error",
+            "Opps! Something doesn't right... Please, try again.",
+            "error"
+          );
+        },
+      });
+    }
+  }
+
+  function updateRoleOptions() {
+    var departmentSelect = document.getElementById("department_id");
+    var positionSelect = document.getElementById("position_id");
+    var selectedDepartment = departmentSelect.value;
+
+    // Clear existing options
+    positionSelect.innerHTML = "";
+
+    // Make an AJAX request to fetch roles based on selected department
+    fetch('{{ route("get.roles", ["department" => "__department_id"]) }}'.replace('__department_id', selectedDepartment))
+      .then(response => response.json())
+      .then(data => {
+        // Clear existing options
+        positionSelect.innerHTML = '';
+
+        // Populate options based on the response
+        positionSelect.appendChild(new Option('::Select Position::', '')); // Add a default option
+        for (var positionId in data) {
+          var option = document.createElement('option');
+          option.value = positionId;
+          option.text = data[positionId];
+          positionSelect.appendChild(option);
+        }
+      })
+      .catch(error => console.error('Error:', error));
+  }
+
+
   let idleTimeout;
 
   function resetIdleTimer() {

@@ -6,7 +6,8 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ForgotPasswordController;
 use App\Http\Controllers\ResetPasswordController;
 use App\Http\Controllers\BusinessController;
-
+use App\Http\Controllers\RoleController;
+use App\Http\Controllers\UserController;
 
 /*
 |--------------------------------------------------------------------------
@@ -49,20 +50,20 @@ Route::middleware('system_admin')->group(function () {
    Route::post('/admin/categories/delete', [\App\Http\Controllers\CategoriesController::class, 'delete'])->name('admin.categories.delete');
    Route::delete('/admin/{categories}', [\App\Http\Controllers\CategoriesController::class, 'destroy']); //deletes post from the database
    Route::post('/admin/categories/apply', [\App\Http\Controllers\CategoriesController::class, 'applyAction'])->name('category.apply');
-   Route::get('/user', [\App\Http\Controllers\UserController::class, 'index'])->name('user.form');
-   Route::get('/user/create', [\App\Http\Controllers\UserController::class, 'create'])->name('user.register');
-   Route::post('/user/store', [\App\Http\Controllers\UserController::class, 'store'])->name('user.store');
+   Route::get('/user', [UserController::class, 'index'])->name('user.form');
+   Route::get('/user/create', [UserController::class, 'create'])->name('user.register');
+   Route::post('/user/store', [UserController::class, 'store'])->name('user.store');
    Route::get('/contact', [\App\Http\Controllers\SendEmailController::class, 'index'])->name('contact');
    Route::post('/contact/send', [\App\Http\Controllers\SendEmailController::class, 'send'])->name('contact');
-   Route::get('/admin/users', [\App\Http\Controllers\UserController::class, 'view']);
-   Route::get('/admin/users/list', [\App\Http\Controllers\UserController::class, 'viewall'])->name('admin.users');
+   Route::get('/admin/users', [UserController::class, 'view']);
+   Route::get('/admin/users/list', [UserController::class, 'viewall'])->name('admin.users');
 
-   Route::get('/positions', [\App\Http\Controllers\RoleController::class, 'index'])->name('positions.index');
-   Route::get('/positions/create', [\App\Http\Controllers\RoleController::class, 'create'])->name('positions.create');
-   Route::post('/positions/store', [\App\Http\Controllers\RoleController::class, 'store'])->name('positions.store');
-   Route::get('/positions/{id}/edit', [\App\Http\Controllers\RoleController::class, 'edit'])->name('positions.edit');
-   Route::put('/positions/{id}/update', [\App\Http\Controllers\RoleController::class, 'update'])->name('positions.update');
-   Route::delete('/positions/{id}/delete', [\App\Http\Controllers\RoleController::class, 'destroy'])->name('positions.destroy');
+   Route::get('/positions', [RoleController::class, 'index'])->name('positions.index');
+   Route::get('/positions/create', [RoleController::class, 'create'])->name('positions.create');
+   Route::post('/positions/store', [RoleController::class, 'store'])->name('positions.store');
+   Route::get('/positions/{id}/edit', [RoleController::class, 'edit'])->name('positions.edit');
+   Route::put('/positions/{id}/update', [RoleController::class, 'update'])->name('positions.update');
+   Route::delete('/positions/{id}/delete', [RoleController::class, 'destroy'])->name('positions.destroy');
 
    Route::get('/businesses', [BusinessController::class, 'index'])->name('business.form');
    Route::post('/businesses/create', [BusinessController::class, 'storeBusiness'])->name('business-setup');
@@ -74,6 +75,7 @@ Route::middleware('system_admin')->group(function () {
    Route::post('/businesses/delete', [BusinessController::class, 'delete'])->name('businesses.delete');
 });
 
+
 Route::get('login', [LoginController::class, 'index'])->name('login');
 Route::get('signout', [LoginController::class, 'signOut'])->name('signout');
 Route::post('custom-login', [LoginController::class, 'signIn'])->name('login.custom');
@@ -83,6 +85,8 @@ Route::get('password-reset/{token}', [ResetPasswordController::class, 'showReset
 Route::post('reset-password', [ResetPasswordController::class, 'reset'])->name('password.update');
 Route::get('pwd-chng-on-logon', [LoginController::class, 'changePasswordOnLogon'])->name('password.pwd-chng-on-logon');
 Route::post('pwd-chng-on-logon', [LoginController::class, 'changePassword'])->name('password.change');
+Route::get('/get-position/{department}', [RoleController::class, 'getPositions'])->name('get.roles');
+Route::get('/account-validation', [UserController::class, 'validateAccountNumber'])->name('api.account_validation');
 
 
 Route::get('/', function () {

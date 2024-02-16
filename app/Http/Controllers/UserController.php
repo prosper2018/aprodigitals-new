@@ -2,25 +2,32 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Bank;
+use App\Models\BusinessDetails;
+use App\Models\CountryCode;
+use App\Models\Department;
 use App\Models\Position;
+use App\Models\Religion;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
 use Yajra\DataTables\Facades\Datatables;
+use Illuminate\Support\Str;
+use App\Http\Controllers\ThirdPartyApiController;
 
 class UserController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+
     public function index()
     {
-        $positions = Position::all();
-        return view('user.register', compact('positions'));
+        $country_codes = CountryCode::all();
+        $banks = Bank::all();
+        $religions = Religion::all();
+        $businesses = BusinessDetails::select(['id', 'business_name'])->where(['is_deleted' => '0'])->get();
+        $departments = Department::select(['id', 'display_name'])->where(['is_deleted' => '0'])->get();
+        return view('user.register', compact('businesses', 'banks', 'departments', 'country_codes', 'religions'));
     }
 
     /**
@@ -42,33 +49,44 @@ class UserController extends Controller
         ]);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
+
+    public function validateAccountNumber(Request $request)
     {
-        //
+        $thirdparty = new ThirdPartyApiController();
+        return $thirdparty->verifyBankAccountNumber($request->bank_account_no, $request->bank_code);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
+
     public function store(Request $request)
     {
-        $request->validate([
-            'password' => ['required', 'string', 'min:8', 'confirmed'],
-            'username' => ['required', 'string', 'max:255', 'unique:users'],
-            'position_id' => ['required'],
-            'firstname' => ['required', 'string', 'max:255'],
-            'lastname' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
-            'mobile_phone' => ['required', 'int', 'min:0', 'unique:users'],
-        ]);
+        $validator = Validator::make(
+            $request->all(),
+            [
+                'username' => ['required', 'string', 'max:255', 'unique:users'],
+                'password' => ['required', 'string', 'min:8', 'confirmed', 'regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]+$/'],
+                'position_id' => ['required'],
+                'firstname' => ['required', 'string', 'max:255'],
+                'lastname' => ['required', 'string', 'max:255'],
+                'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
+                'mobile_phone' => ['required', 'numeric', 'min:0', 'unique:users'],
+            ],
+            // [
+            //     'username.required' => 'The :attribute field is required.',
+            //     'password.required' => 'The :attribute field is required.',
+            //     'password.min' => 'The :attribute must be at least :min characters.',
+            //     'password.regex' => 'The :attribute must contain at least one uppercase letter, one lowercase letter, one number, and one special character.',
+            //     'mobile_phone.required' => 'The :attribute field is required.',
+            //     'mobile_phone.unique' => 'The :attribute is already taken.',
+            // ]
+        );
+        // dd($validator->errors());
+        if ($validator->fails()) {
+            return redirect()->route('user.form')->withErrors($validator->errors());
+        }
+        // dd($validator);
+
+
+        $verificationToken = Str::random(60); // Generate a random 60-character string
 
         $data = [
             'email' => $request->email,
@@ -92,6 +110,7 @@ class UserController extends Controller
             // 'posted_user',
             'posted_ip' => $request->ip(),
             'gender' => $request->gender,
+            'verification_token' => $verificationToken,
         ];
 
         $send = User::create($data);
@@ -110,7 +129,7 @@ class UserController extends Controller
         return view('user.view', ['users' => $users]);
     }
 
- 
+
     public function viewall(Request $request)
     {
         $data = DB::table('users')->leftJoin('positions', 'users.position_id', '=', 'positions.position_id')
@@ -123,46 +142,25 @@ class UserController extends Controller
         return view('user.view');
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\User  $user
-     * @return \Illuminate\Http\Response
-     */
+
     public function show(User $user)
     {
         //
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\User  $user
-     * @return \Illuminate\Http\Response
-     */
+
     public function edit(User $user)
     {
         //
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\User  $user
-     * @return \Illuminate\Http\Response
-     */
+
     public function update(Request $request, User $user)
     {
         //
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\User  $user
-     * @return \Illuminate\Http\Response
-     */
+
     public function destroy(User $user)
     {
         //

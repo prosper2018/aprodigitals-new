@@ -65,7 +65,9 @@ class User extends Authenticatable
         'bvn_verified',
         'completed_reg',
         'userid',
-        'nin'
+        'nin',
+        'verified', 
+        'verification_token',
     ];
 
     /**

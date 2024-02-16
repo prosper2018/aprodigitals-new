@@ -119,4 +119,9 @@ class RoleController extends Controller
         DB::table('positions')->where('position_id', $id)->delete();
         return redirect()->route('positions.index')->with('message', 'Role deleted successfully!');
     }
+
+    public function getPositions($department) {
+        $positions = Position::where('department_id', $department)->pluck('position_name', 'position_id');
+        return response()->json($positions);
+    }
 }
