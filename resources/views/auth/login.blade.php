@@ -42,7 +42,8 @@
                                             <span class="text-danger">{{ $errors->first('password') }}</span>
                                             @endif
                                             <small>
-                                                <a href="{{ route('password.request') }}">Forgot password?</a>
+                                                <a href="{{ route('password.request') }}">Forgot password?</a>&nbsp;&nbsp;&nbsp;&nbsp;
+                                                <a href="{{ route('resend.activation.form') }}">Resend Activation Email</a>
                                             </small>
                                         </div>
                                         <div>

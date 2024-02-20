@@ -7,16 +7,20 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
-class UserLoggedInNotification  extends Notification
+class SendVerificationEmailNotification extends Notification
 {
     use Queueable;
+
+    protected $verificationUrl;
+    protected $message;
 
     /**
      * Create a new notification instance.
      */
-    public function __construct()
+    public function __construct($verificationUrl, $message)
     {
-        //
+        $this->verificationUrl = $verificationUrl;
+        $this->message = $message;
     }
 
     /**
@@ -34,17 +38,9 @@ class UserLoggedInNotification  extends Notification
      */
     public function toMail(object $notifiable): MailMessage
     {
-        $appName = env("APP_NAME");
-
-        $message = "\n\n\n<b>Hello " . $notifiable->lastname . "</b>,\n\n" .
-            "You have logged in to your account.\n\n" .
-            "If this was not you, please contact us immediately.\n\n" .
-            "Regards, \n<b>" . $appName."</b>\n\n\n";
-
         return (new MailMessage)
-            ->from('info@aprodigitals.com', $appName)
-            ->subject('Login Notification')
-            ->markdown('email', ['slot' => $message]);
+            ->subject('Account Verification Notification')
+            ->markdown('email', ['slot' => $this->message, 'verificationUrl' => $this->verificationUrl]);
     }
 
     /**

@@ -16,9 +16,22 @@ use Illuminate\Support\Facades\DB;
 use Yajra\DataTables\Facades\Datatables;
 use Illuminate\Support\Str;
 use App\Http\Controllers\ThirdPartyApiController;
+use App\Notifications\SendVerificationEmailNotification;
+use Illuminate\Support\Facades\Storage;
 
 class UserController extends Controller
 {
+    public function __construct()
+    {
+        // Check if the logos directory exists, and create it if not
+        if (!Storage::exists('photos')) {
+            Storage::makeDirectory('photos');
+        }
+
+        if (!Storage::exists('staffIDs')) {
+            Storage::makeDirectory('staffIDs');
+        }
+    }
 
     public function index()
     {
@@ -59,32 +72,72 @@ class UserController extends Controller
 
     public function store(Request $request)
     {
+        if ($request->has('photo')) {
+            $validator = Validator::make($request->all(), [
+                'photo' => ['required', 'image', 'mimes:jpeg,png,jpg,gif,svg', 'max:200'],
+            ]);
+
+            if ($validator->fails()) {
+                return redirect()->route('user.form')->withErrors($validator->errors());
+            }
+
+            // Upload the image to the specified directory
+            $imageName = str_replace(' ', '_', $request->username) . '_' . time() . '.' . $request->photo->extension();
+            $request->photo->move(public_path('photos'), $imageName);
+            $path = 'photos/' . $imageName;
+        }
+
+        if ($request->has('staff_id_card')) {
+            $validator = Validator::make($request->all(), [
+                'staff_id_card' => ['required', 'image', 'mimes:jpeg,png,jpg,gif,svg', 'max:200'],
+            ]);
+
+            if ($validator->fails()) {
+                return redirect()->route('user.form')->withErrors($validator->errors());
+            }
+
+            // Upload the image to the specified directory
+            $imageName = str_replace(' ', '_', $request->username) . '_' . time() . '.' . $request->staff_id_card->extension();
+            $request->staff_id_card->move(public_path('staffIDs'), $imageName);
+            $staff_id_card_path = 'staffIDs/' . $imageName;
+        }
+
         $validator = Validator::make(
             $request->all(),
             [
                 'username' => ['required', 'string', 'max:255', 'unique:users'],
-                'password' => ['required', 'string', 'min:8', 'confirmed', 'regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]+$/'],
+                'password' => ['required', 'string', 'min:8', 'regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]+$/'],
+                'department_id' => ['required'],
                 'position_id' => ['required'],
-                'firstname' => ['required', 'string', 'max:255'],
-                'lastname' => ['required', 'string', 'max:255'],
+                'gender' => ['required'],
+                'dob' => ['required'],
+                'contact_address' => ['required'],
+                'nationality' => ['required'],
+                'religion' => ['required'],
+                'marital_status' => ['required'],
+                'employment_date' => ['required'],
+                'termination_date' => ['required'],
+                'employment_type' => ['required'],
+                'business_id' => ['required'],
+                'entry_salary' => ['required'],
+                'current_salary' => ['required', 'numeric', 'min:0'],
+                'current_usd_salary' => ['required', 'numeric', 'min:0'],
+                'last_increment' => ['required', 'numeric', 'min:0'],
+                'last_increment_date' => ['required'],
+                'last_promotion' => ['required'],
+                'bank_account_no' => ['required', 'numeric'],
+                'bank_code' => ['required'],
+                'bank_account_name' => ['required'],
+                'firstname' => ['required', 'string', 'max:100'],
+                'lastname' => ['required', 'string', 'max:100'],
                 'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
-                'mobile_phone' => ['required', 'numeric', 'min:0', 'unique:users'],
-            ],
-            // [
-            //     'username.required' => 'The :attribute field is required.',
-            //     'password.required' => 'The :attribute field is required.',
-            //     'password.min' => 'The :attribute must be at least :min characters.',
-            //     'password.regex' => 'The :attribute must contain at least one uppercase letter, one lowercase letter, one number, and one special character.',
-            //     'mobile_phone.required' => 'The :attribute field is required.',
-            //     'mobile_phone.unique' => 'The :attribute is already taken.',
-            // ]
+                'mobile_phone' => ['required', 'numeric', 'min:11', 'unique:users'],
+            ]
         );
-        // dd($validator->errors());
+
         if ($validator->fails()) {
             return redirect()->route('user.form')->withErrors($validator->errors());
         }
-        // dd($validator);
-
 
         $verificationToken = Str::random(60); // Generate a random 60-character string
 
@@ -93,7 +146,27 @@ class UserController extends Controller
             'password' => Hash::make($request->password),
             'username' => $request->username,
             'position_id' => $request->position_id,
-            // 'position_name',
+            'department_id' => $request->department_id,
+            'dob' => $request->dob,
+            'contact_address' => $request->contact_address,
+            'nationality' => $request->nationality,
+            'religion' => $request->religion,
+            'marital_status' => $request->marital_status,
+            'employment_date' => $request->employment_date,
+            'termination_date' => $request->termination_date,
+            'employment_type' => $request->employment_type,
+            'business_id' => $request->business_id,
+            'entry_salary' => $request->entry_salary,
+            'current_salary' => $request->current_salary,
+            'current_usd_salary' => $request->current_usd_salary,
+            'last_increment' => $request->last_increment,
+            'last_increment_date' => $request->last_increment_date,
+            'last_promotion' => $request->last_promotion,
+            'photo' => $path,
+            'staff_id_card' => $staff_id_card_path,
+            'bank_account_no' => $request->bank_account_no,
+            'bank_code' => $request->bank_code,
+            'bank_account_name' => $request->bank_account_name,
             'firstname' => $request->firstname,
             'lastname' => $request->lastname,
             'mobile_phone' => $request->mobile_phone,
@@ -106,8 +179,7 @@ class UserController extends Controller
             'day_5' => isset($request->day_1) ? 1 : 0,
             'day_6' => isset($request->day_1) ? 1 : 0,
             'day_7' => isset($request->day_1) ? 1 : 0,
-            'staff_id' => $request->staff_id,
-            // 'posted_user',
+            // 'staff_id' => $request->staff_id,
             'posted_ip' => $request->ip(),
             'gender' => $request->gender,
             'verification_token' => $verificationToken,
@@ -115,7 +187,19 @@ class UserController extends Controller
 
         $send = User::create($data);
 
-        return redirect()->route('user.register')->with('message', 'User added successfully!');
+        if (!$send) {
+            return redirect()->route('user.register')->with('error', 'Unable to Create User at the moment! Please, try again.');
+        }
+
+        // Send verification email
+        $message = '<main style="padding: 20px;">
+        <p>Please click the button below to verify your email address:</p>
+        <a href="'.route('verify', $send->verification_token).'" style="background-color: #4CAF50; border: none; color: white; padding: 15px 32px; text-align: center; text-decoration: none; display: inline-block; font-size: 16px; margin: 4px 2px; cursor: pointer; border-radius: 5px;">Verify Email</a>
+        <p>If you did not create an account, no further action is required.</p>
+        </main> ';
+        $send->notify(new SendVerificationEmailNotification(route('verify', $send->verification_token), $message));
+
+        return redirect()->route('user.register')->with('success', 'User added successfully!');
     }
 
     /**
@@ -142,27 +226,19 @@ class UserController extends Controller
         return view('user.view');
     }
 
-
-    public function show(User $user)
+    public function verify($token)
     {
-        //
-    }
+        $user = User::where('verification_token', $token)->firstOrFail();
 
+        $verify = $user->update([
+            'verified' => true,
+            'verification_token' => null,
+        ]);
 
-    public function edit(User $user)
-    {
-        //
-    }
+        if (!$verify) {
+            return redirect()->route('login')->with('error', 'Unable to verify User at the moment! Please, try again.');
+        }
 
-
-    public function update(Request $request, User $user)
-    {
-        //
-    }
-
-
-    public function destroy(User $user)
-    {
-        //
+        return redirect()->route('login')->with('success', 'Your email has been verified. You can now login.');
     }
 }

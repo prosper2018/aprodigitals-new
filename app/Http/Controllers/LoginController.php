@@ -13,8 +13,9 @@ use App\Models\Categories;
 use App\Models\Comments;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Support\Facades\Password;
+use Illuminate\Support\Str;
 use App\Events\UserLoggedIn;
+use App\Notifications\SendVerificationEmailNotification;
 
 
 class LoginController extends Controller
@@ -22,6 +23,11 @@ class LoginController extends Controller
     public function index()
     {
         return view('auth.login');
+    }
+
+    public function resendMail()
+    {
+        return view('auth.resend-activation-mail');
     }
 
 
@@ -128,7 +134,28 @@ class LoginController extends Controller
             $requiresLogin = $roleEnabled_arr->requires_login;
 
 
-            if ($user_info->user_disabled == '1') {
+            if ($user_info->verified != '1') {
+                // User Accout not Veriffied
+                if ($user_info->verification_token == '') {
+                    $verification_token = Str::random(60);
+
+                    
+                    User::where(['username' => $user_info->username])->update([
+                        'verification_token' => $verification_token
+                    ]);
+
+                    $verify = User::where('id', auth()->user()->id)->first();
+;                    // Resend verification email
+                    $message = '<main style="padding: 20px;">
+                            <p>Please click the button below to verify your email address:</p>
+                            <a href="' . route('verify', $verification_token) . '" style="background-color: #4CAF50; border: none; color: white; padding: 15px 32px; text-align: center; text-decoration: none; display: inline-block; font-size: 16px; margin: 4px 2px; cursor: pointer; border-radius: 5px;">Verify Email</a>
+                            <p>If you did not create an account, no further action is required.</p>
+                            </main> ';
+                            
+                    $verify->notify(new SendVerificationEmailNotification(route('verify', $verification_token), $message));
+                }
+                $label = "18";
+            } else if ($user_info->user_disabled == '1') {
                 // User Accout is Disabled
                 $label = "2";
             } else if ($user_info->user_locked == '1') {
@@ -286,6 +313,10 @@ class LoginController extends Controller
                 $code = '400';
                 $message = 'You are required to Change Password on Logon.';
                 break;
+            case '18':
+                $code = '403';
+                $message = 'You have not verified your email. Please, go to your email to verify your account or request for a new activation link  if you did not receive the verification email.';
+                break;
             default:
                 $code = '403';
                 $message = 'Unable to proceed at the moment. Kindly try again later.';
@@ -315,7 +346,7 @@ class LoginController extends Controller
     public function changePassword(Request $request)
     {
         $user = Auth::user();
-        
+
         $validator = Validator::make($request->all(), [
             'password' => [
                 'required',
@@ -390,5 +421,28 @@ class LoginController extends Controller
         //generate jwt token
 
         return array('response_code' => '200', 'response_message' => 'Login successful');
+    }
+
+    public function resendActivationMail(Request $request)
+    {
+        $user = User::where('email', $request->email)->first();
+
+        if (!$user) {
+            return redirect()->back()->with('error', 'User not found.');
+        }
+
+        if ($user->verified) {
+            return redirect()->back()->with('error', 'User is already verified.');
+        }
+
+        // Resend verification email
+        $message = '<main style="padding: 20px;">
+        <p>Please click the button below to verify your email address:</p>
+        <a href="' . route('verify', $user->verification_token) . '" style="background-color: #4CAF50; border: none; color: white; padding: 15px 32px; text-align: center; text-decoration: none; display: inline-block; font-size: 16px; margin: 4px 2px; cursor: pointer; border-radius: 5px;">Verify Email</a>
+        <p>If you did not create an account, no further action is required.</p>
+        </main> ';
+        $user->notify(new SendVerificationEmailNotification(route('verify', $user->verification_token), $message));
+
+        return redirect()->back()->with('success', 'Activation mail resent successfully.');
     }
 }

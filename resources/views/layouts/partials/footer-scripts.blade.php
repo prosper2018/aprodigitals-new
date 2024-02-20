@@ -32,6 +32,19 @@
 
 
 <script>
+  $(function() {
+    var positionSelect = document.getElementById("position_id");
+
+    // Set the selected city based on the old input value
+    var oldPositionValue = "{{ old('position_id') }}";
+    if (oldPositionValue) {
+      var positionOption = positionSelect.querySelector('option[value="' + oldPositionValue + '"]');
+      if (positionOption) {
+        positionSelect.selected = true;
+      }
+    }
+  });
+
   function getBankAccount() {
     var bank_code = $("select#bank_code").children("option:selected").val(),
       bank_account_no = $("#bank_account_no").val();
@@ -68,6 +81,7 @@
       });
     }
   }
+
 
   function updateRoleOptions() {
     var departmentSelect = document.getElementById("department_id");
@@ -358,7 +372,7 @@
           searchable: false,
           orderable: false,
           render: function(data, type, row) {
-            return '<img src="/assets' + row.logo + '" alt="Business Logo" width="50px" height="50px">';
+            return '<img src="/' + row.logo + '" alt="Business Logo" width="50px" height="50px">';
           }
         },
         {

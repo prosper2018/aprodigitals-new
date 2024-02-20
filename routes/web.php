@@ -87,6 +87,9 @@ Route::get('pwd-chng-on-logon', [LoginController::class, 'changePasswordOnLogon'
 Route::post('pwd-chng-on-logon', [LoginController::class, 'changePassword'])->name('password.change');
 Route::get('/get-position/{department}', [RoleController::class, 'getPositions'])->name('get.roles');
 Route::get('/account-validation', [UserController::class, 'validateAccountNumber'])->name('api.account_validation');
+Route::get('/verify/{token}', [UserController::class, 'verify'])->name('verify');
+Route::get('/resend-activation', [LoginController::class, 'resendMail'])->name('resend.activation.form');
+Route::post('/resend-activation-mail', [LoginController::class, 'resendActivationMail'])->name('resend.activation.mail');
 
 
 Route::get('/', function () {

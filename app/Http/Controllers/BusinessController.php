@@ -6,9 +6,18 @@ use App\Models\BusinessDetails;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Storage;
 
 class BusinessController extends Controller
 {
+    public function __construct()
+    {
+        // Check if the logos directory exists, and create it if not
+        if (!Storage::exists('logos')) {
+            Storage::makeDirectory('logos');
+        }
+    }
+
     public function index()
     {
         return view('business.business-setup');
@@ -31,8 +40,10 @@ class BusinessController extends Controller
             return redirect()->route('business.form')->withErrors($validator->errors());
         }
 
-        $ext = pathinfo($request->logo->getRealPath(), PATHINFO_EXTENSION);
-        $path = $request->logo->storeAs('photos', str_replace(' ', '_', $request->business_name . '.' . $ext));
+        // Upload the image to the specified directory
+        $imageName = str_replace(' ', '_', $request->business_name) . '_' . time() . '.' . $request->logo->extension();
+        $request->logo->move(public_path('logos'), $imageName);
+        $imageUrl = 'logos/' . $imageName;
 
         try {
 
@@ -40,7 +51,7 @@ class BusinessController extends Controller
                 'business_name' => $request->business_name,
                 'address' => $request->address,
                 'description' => $request->description,
-                'logo' => $path,
+                'logo' => $imageUrl,
                 'posted_userid' => auth()->user()->id,
                 'posted_user' => auth()->user()->username,
                 'posted_ip' => $request->ip(),
@@ -97,28 +108,33 @@ class BusinessController extends Controller
                 return redirect()->route('business.form')->withErrors($validator->errors());
             }
 
-            $imageName = str_replace(' ', '_', $request->business_name) . $request->logo->extension();
+            // Upload the image to the specified directory
+            $imageName = str_replace(' ', '_', $request->business_name) . '_' . time() . '.' . $request->logo->extension();
+            $request->logo->move(public_path('logos'), $imageName);
+            $imageUrl = 'logos/' . $imageName;
 
-            $request->logo->move(public_path('photos'), $imageName);
+            if (file_exists($post->logo)) {
+                unlink($post->logo);
+            }
         } else {
-            $imageName = $post->logo;
+            $imageUrl = $post->logo;
         }
 
         $validator = Validator::make($request->all(), [
             'business_name' => 'required|unique:business_details,business_name,' . $id,
             'address' => 'required',
         ]);
-    
+
         if ($validator->fails()) {
             return redirect()->back()->withErrors($validator)->withInput();
         }
-    
+
 
         $update = $post->update([
             'business_name' => $request->business_name,
             'address' => $request->address,
             'description' => $request->description,
-            'logo' => $imageName,
+            'logo' => $imageUrl,
         ]);
 
         if ($update > 0) {
