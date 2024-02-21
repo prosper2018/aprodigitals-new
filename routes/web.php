@@ -50,13 +50,14 @@ Route::middleware('system_admin')->group(function () {
    Route::post('/admin/categories/delete', [\App\Http\Controllers\CategoriesController::class, 'delete'])->name('admin.categories.delete');
    Route::delete('/admin/{categories}', [\App\Http\Controllers\CategoriesController::class, 'destroy']); //deletes post from the database
    Route::post('/admin/categories/apply', [\App\Http\Controllers\CategoriesController::class, 'applyAction'])->name('category.apply');
+
    Route::get('/user', [UserController::class, 'index'])->name('user.form');
    Route::get('/user/create', [UserController::class, 'create'])->name('user.register');
    Route::post('/user/store', [UserController::class, 'store'])->name('user.store');
-   Route::get('/contact', [\App\Http\Controllers\SendEmailController::class, 'index'])->name('contact');
-   Route::post('/contact/send', [\App\Http\Controllers\SendEmailController::class, 'send'])->name('contact');
    Route::get('/admin/users', [UserController::class, 'view']);
    Route::get('/admin/users/list', [UserController::class, 'viewall'])->name('admin.users');
+   Route::get('/admin/users/{user}/edit', [UserController::class, 'edit'])->name('users.edit'); //shows edit form
+   Route::put('/admin/users/{id}', [UserController::class, 'update'])->name('users.update');
 
    Route::get('/positions', [RoleController::class, 'index'])->name('positions.index');
    Route::get('/positions/create', [RoleController::class, 'create'])->name('positions.create');
@@ -90,6 +91,8 @@ Route::get('/account-validation', [UserController::class, 'validateAccountNumber
 Route::get('/verify/{token}', [UserController::class, 'verify'])->name('verify');
 Route::get('/resend-activation', [LoginController::class, 'resendMail'])->name('resend.activation.form');
 Route::post('/resend-activation-mail', [LoginController::class, 'resendActivationMail'])->name('resend.activation.mail');
+Route::get('/contact', [\App\Http\Controllers\SendEmailController::class, 'index'])->name('contact');
+Route::post('/contact/send', [\App\Http\Controllers\SendEmailController::class, 'send'])->name('contact.email');
 
 
 Route::get('/', function () {

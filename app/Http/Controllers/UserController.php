@@ -78,7 +78,9 @@ class UserController extends Controller
             ]);
 
             if ($validator->fails()) {
-                return redirect()->route('user.form')->withErrors($validator->errors());
+                return redirect()->route('user.form')
+                    ->withErrors($validator->errors())
+                    ->withInput();
             }
 
             // Upload the image to the specified directory
@@ -93,7 +95,9 @@ class UserController extends Controller
             ]);
 
             if ($validator->fails()) {
-                return redirect()->route('user.form')->withErrors($validator->errors());
+                return redirect()->route('user.form')
+                    ->withErrors($validator->errors())
+                    ->withInput();
             }
 
             // Upload the image to the specified directory
@@ -136,7 +140,9 @@ class UserController extends Controller
         );
 
         if ($validator->fails()) {
-            return redirect()->route('user.form')->withErrors($validator->errors());
+            return redirect()->route('user.form')
+                ->withErrors($validator->errors())
+                ->withInput();
         }
 
         $verificationToken = Str::random(60); // Generate a random 60-character string
@@ -194,7 +200,7 @@ class UserController extends Controller
         // Send verification email
         $message = '<main style="padding: 20px;">
         <p>Please click the button below to verify your email address:</p>
-        <a href="'.route('verify', $send->verification_token).'" style="background-color: #4CAF50; border: none; color: white; padding: 15px 32px; text-align: center; text-decoration: none; display: inline-block; font-size: 16px; margin: 4px 2px; cursor: pointer; border-radius: 5px;">Verify Email</a>
+        <a href="' . route('verify', $send->verification_token) . '" style="background-color: #4CAF50; border: none; color: white; padding: 15px 32px; text-align: center; text-decoration: none; display: inline-block; font-size: 16px; margin: 4px 2px; cursor: pointer; border-radius: 5px;">Verify Email</a>
         <p>If you did not create an account, no further action is required.</p>
         </main> ';
         $send->notify(new SendVerificationEmailNotification(route('verify', $send->verification_token), $message));

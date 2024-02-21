@@ -119,19 +119,21 @@
       window.location.href = "{{ route('signout') }}"; // Redirect to logout page
     }, 5 * 60 * 1000); // Idle timeout duration in milliseconds (e.g., 30 minutes)
   }
+</script>
 
-
+@if(auth()->user())
+<script>
   // Initialize idle timer on page load
   resetIdleTimer();
-
 
   // Add event listeners for user activity (e.g., mousemove, keydown, click)
   document.addEventListener('mousemove', resetIdleTimer);
   document.addEventListener('keydown', resetIdleTimer);
   document.addEventListener('click', resetIdleTimer);
+</script>
+@endif
 
-
-
+<script type="text/javascript">
   document.addEventListener("DOMContentLoaded", function() {
     if (document.getElementById("chartjs-dashboard-bar")) {
       // Bar chart
@@ -490,7 +492,7 @@
           searchable: false,
           orderable: false,
           render: function(data, type, row) {
-            return '<a data-id="' + row.id + '" href="/blog/' + row.id + '/edit" class="edit btn btn-success btn-sm">Edit</a><button data-id="{{ "' + row.id + '"}}" class="delete  btn btn-danger btn-sm" onclick="delete_post(this)">Delete</button>';
+            return '<a data-id="' + row.id + '" href="/admin/users/' + row.id + '/edit" class="edit btn btn-success btn-sm">Edit</a><button data-id="{{ "' + row.id + '"}}" class="delete  btn btn-danger btn-sm" onclick="delete_user(this)">Delete</button>';
           }
         },
         {

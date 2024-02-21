@@ -139,19 +139,19 @@ class LoginController extends Controller
                 if ($user_info->verification_token == '') {
                     $verification_token = Str::random(60);
 
-                    
+
                     User::where(['username' => $user_info->username])->update([
                         'verification_token' => $verification_token
                     ]);
 
                     $verify = User::where('id', auth()->user()->id)->first();
-;                    // Resend verification email
+                    // Resend verification email
                     $message = '<main style="padding: 20px;">
                             <p>Please click the button below to verify your email address:</p>
                             <a href="' . route('verify', $verification_token) . '" style="background-color: #4CAF50; border: none; color: white; padding: 15px 32px; text-align: center; text-decoration: none; display: inline-block; font-size: 16px; margin: 4px 2px; cursor: pointer; border-radius: 5px;">Verify Email</a>
                             <p>If you did not create an account, no further action is required.</p>
                             </main> ';
-                            
+
                     $verify->notify(new SendVerificationEmailNotification(route('verify', $verification_token), $message));
                 }
                 $label = "18";
