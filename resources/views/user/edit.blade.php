@@ -20,25 +20,16 @@
                         </div>
 
                         <div class="card-body">
-                            <form method="POST" action="{{ route('user.store') }}" enctype="multipart/form-data">
+                            <form method="POST" action="{{ route('users.update', ['id' => $user->id]) }}" enctype="multipart/form-data">
                                 @csrf
+                                @method('PUT')
 
                                 <div class="row">
-                                    <div class="col-md-6 mb-3">
-                                        <label for="name" class="col-form-label">{{ __('User Name') }}</label>
-
-                                        <input id="username" type="text" class="form-control" name="username" value="{{ old('username') }}" autocomplete="username" autofocus>
-
-                                        @if ($errors->has('username'))
-                                        <span class="text-danger font-weight-bold" role="alert">
-                                            {{ $errors->first('username') }}
-                                        </span>
-                                        @endif
-                                    </div>
+                                    
                                     <div class="col-md-6 mb-3">
                                         <label for="firstname" class="col-form-label">{{ __('First Name') }}</label>
 
-                                        <input id="firstname" type="text" class="form-control" name="firstname" value="{{ old('firstname') }}" autocomplete="firstname" autofocus>
+                                        <input id="firstname" type="text" class="form-control" name="firstname" value="{{ $user->firstname }}" autocomplete="firstname" autofocus>
 
                                         @if ($errors->has('firstname'))
                                         <span class="text-danger font-weight-bold" role="alert">
@@ -49,7 +40,7 @@
                                     <div class="col-md-6 mb-3">
                                         <label for="lastname" class="col-form-label">{{ __('Last Name') }}</label>
 
-                                        <input id="lastname" type="text" class="form-control" name="lastname" value="{{ old('lastname') }}" autocomplete="lastname" autofocus>
+                                        <input id="lastname" type="text" class="form-control" name="lastname" value="{{ $user->lastname }}" autocomplete="lastname" autofocus>
 
                                         @if ($errors->has('lastname'))
                                         <span class="text-danger font-weight-bold" role="alert">
@@ -60,7 +51,7 @@
                                     <div class="col-md-6 mb-3">
                                         <label for="mobile_phone" class="col-form-label">{{ __('Phone Number') }}</label>
 
-                                        <input id="mobile_phone" type="text" class="form-control" name="mobile_phone" value="{{ old('mobile_phone') }}" autocomplete="mobile_phone" autofocus>
+                                        <input id="mobile_phone" type="text" class="form-control" name="mobile_phone" value="{{ $user->mobile_phone }}" autocomplete="mobile_phone" autofocus>
 
                                         @if ($errors->has('mobile_phone'))
                                         <span class="text-danger font-weight-bold" role="alert">
@@ -72,7 +63,7 @@
                                     <div class="col-md-6 mb-3">
                                         <label for="email" class="col-form-label">{{ __('Email Address') }}</label>
 
-                                        <input id="email" type="email" class="form-control" name="email" value="{{ old('email') }}" autocomplete="email">
+                                        <input id="email" type="email" class="form-control" name="email" value="{{ $user->email }}" autocomplete="email">
 
                                         @if ($errors->has('email'))
                                         <span class="text-danger font-weight-bold" role="alert">
@@ -87,7 +78,7 @@
                                         <select name="department_id" id="department_id" class="form-control select" onchange="updateRoleOptions()">
                                             <option value="">::Select Department::</option>
                                             @foreach ($departments as $key => $department)
-                                            <option value="{{ $department->id }}" @if(old('department_id')==strval($department->id)) selected @endif>{{ $department->display_name }}</option>
+                                            <option value="{{ $department->id }}" @if($user->department_id == strval($department->id)) selected @endif>{{ $department->display_name }}</option>
                                             @endforeach
                                         </select>
                                         @if ($errors->has('department_id'))
@@ -100,7 +91,7 @@
                                         <label for="position_id" class="col-form-label">{{ __('User Role') }}</label>
 
                                         <select name="position_id" id="position_id" class="form-control select">
-                                            <option value="">::Select Position::</option>
+                                            <option value="{{ $user->position_id }}">{{ $position_details->position_name }}</option>
                                         </select>
                                         @if ($errors->has('position_id'))
                                         <span class="text-danger font-weight-bold" role="alert">
@@ -114,8 +105,8 @@
 
                                         <select class="form-control select" name="gender" id="gender">
                                             <option value="">::select option::</option>
-                                            <option value="Male" @if(old('gender')=='Male' ) selected @endif>Male</option>
-                                            <option value="Female" @if(old('gender')=='Female' ) selected @endif>Female</option>
+                                            <option value="Male" @if($user->gender == 'Male' ) selected @endif>Male</option>
+                                            <option value="Female" @if($user->gender == 'Female' ) selected @endif>Female</option>
                                         </select>
                                         @if ($errors->has('gender'))
                                         <span class="text-danger font-weight-bold" role="alert">
@@ -125,23 +116,9 @@
                                     </div>
 
                                     <div class="col-md-6 mb-3">
-                                        <label for="password" class="col-form-label">{{ __('Password') }}</label>
-                                        <div class="password-toggle">
-                                            <input id="password" type="password" value="{{ old('password') }}" class="form-control" name="password" autocomplete="new-password">
+                                        <label for="dob" class="col-form-label">{{ __('Date of Birth') }}</label>
 
-                                            <span id="visibility-icon" class="toggle-password" onclick="togglePasswordVisibility('password', 'visibility-icon')"> <i class="fas fa-eye"></i></span>
-                                        </div>
-                                        @if ($errors->has('password'))
-                                        <span class="text-danger font-weight-bold" role="alert">
-                                            {{ $errors->first('password') }}
-                                        </span>
-                                        @endif
-                                    </div>
-
-                                    <div class="col-md-6 mb-3">
-                                        <label for="dob" class="col-md-4 col-form-label text-md-end">{{ __('Date of Birth') }}</label>
-
-                                        <input id="dob" type="date" class="form-control" name="dob" value="{{ old('dob') }}" autocomplete="dob">
+                                        <input id="dob" type="date" class="form-control" name="dob" value="{{ $user->dob }}" autocomplete="dob">
                                         @if ($errors->has('dob'))
                                         <span class="text-danger font-weight-bold" role="alert">
                                             {{ $errors->first('dob') }}
@@ -150,8 +127,8 @@
                                     </div>
                                     <div class="col-md-12 col-sm-12 mb-3">
                                         <div class="form-group">
-                                            <label>Address</label>
-                                            <textarea class="form-control" role="2" name="contact_address" style="height: 80px !important;" id="contact_address">{{ old('contact_address') }}</textarea>
+                                            <label class="form-label">Address</label>
+                                            <textarea class="form-control" role="2" name="contact_address" style="height: 80px !important;" id="contact_address">{{ $user->contact_address }}</textarea>
                                             @if ($errors->has('contact_address'))
                                             <span class="text-danger font-weight-bold" role="alert">
                                                 {{ $errors->first('contact_address') }}
@@ -161,12 +138,12 @@
                                     </div>
                                     <div class="col-md-4 col-sm-12 mb-3">
                                         <div class="form-group">
-                                            <label>Nationality</label>
+                                            <label class="form-label">Nationality</label>
 
                                             <select class="form-control select " name="nationality" data-toggle="select2" id="nationality">
                                                 <option value="">:::SELECT:::</option>
                                                 @foreach ($country_codes as $row)
-                                                <option value="{{ $row->id }}" @if(old('nationality')==strval($row->id)) selected @endif>{{ $row->country_name }}</option>
+                                                <option value="{{ $row->id }}" @if($user->nationality == strval($row->id)) selected @endif>{{ $row->country_name }}</option>
                                                 @endforeach
                                             </select>
                                             @if ($errors->has('nationality'))
@@ -178,11 +155,11 @@
                                     </div>
                                     <div class="col-md-4 col-sm-12 mb-3">
                                         <div class="form-group">
-                                            <label>Religion</label>
+                                            <label class="form-label">Religion</label>
                                             <select class="form-control select " name="religion" data-toggle="select2" id="religion">
                                                 <option value="">:::SELECT:::</option>
                                                 @foreach ($religions as $row)
-                                                <option value="{{ $row->id }}" @if(old('religion')==strval($row->id)) selected @endif>{{ $row->display_name }}</option>
+                                                <option value="{{ $row->id }}" @if($user->religion == strval($row->id)) selected @endif>{{ $row->display_name }}</option>
                                                 @endforeach
                                             </select>
                                             @if ($errors->has('religion'))
@@ -194,13 +171,13 @@
                                     </div>
                                     <div class="col-md-4 col-sm-12 mb-3">
                                         <div class="form-group">
-                                            <label>Martital Status</label>
+                                            <label class="form-label">Martital Status</label>
                                             <select class="form-control select " name="marital_status" data-toggle="select2" id="marital_status">
                                                 <option value="">:::SELECT:::</option>
-                                                <option value="Single" @if(old('marital_status')=='Single' ) selected @endif>Single</option>
-                                                <option value="Married" @if(old('marital_status')=='Married' ) selected @endif>Married</option>
-                                                <option value="Divorced" @if(old('marital_status')=='Divorced' ) selected @endif>Divorced</option>
-                                                <option value="Widowed" @if(old('marital_status')=='Widowed' ) selected @endif>Widowed</option>
+                                                <option value="Single" @if($user->marital_status == 'Single' ) selected @endif>Single</option>
+                                                <option value="Married" @if($user->marital_status == 'Married' ) selected @endif>Married</option>
+                                                <option value="Divorced" @if($user->marital_status == 'Divorced' ) selected @endif>Divorced</option>
+                                                <option value="Widowed" @if($user->marital_status == 'Widowed' ) selected @endif>Widowed</option>
                                             </select>
                                             @if ($errors->has('marital_status'))
                                             <span class="text-danger font-weight-bold" role="alert">
@@ -211,8 +188,8 @@
                                     </div>
                                     <div class="col-md-4 col-sm-12 mb-3">
                                         <div class="form-group">
-                                            <label>Employment Date</label>
-                                            <input class="form-control date-picker" name="employment_date" value="{{ old('employment_date') }}" placeholder="Select Date" type="date" id="employment_date" />
+                                            <label class="form-label">Employment Date</label>
+                                            <input class="form-control date-picker" name="employment_date" value="{{ $user->employment_date }}" placeholder="Select Date" type="date" id="employment_date" />
                                         </div>
                                         @if ($errors->has('employment_date'))
                                         <span class="text-danger font-weight-bold" role="alert">
@@ -222,8 +199,8 @@
                                     </div>
                                     <div class="col-md-4 col-sm-12 mb-3">
                                         <div class="form-group">
-                                            <label>Termination Date</label>
-                                            <input class="form-control date-picker" name="termination_date" value="{{ old('termination_date') }}" placeholder="Select Date" type="date" id="termination_date" />
+                                            <label class="form-label">Termination Date</label>
+                                            <input class="form-control date-picker" name="termination_date" value="{{ $user->termination_date }}" placeholder="Select Date" type="date" id="termination_date" />
                                         </div>
                                         @if ($errors->has('termination_date'))
                                         <span class="text-danger font-weight-bold" role="alert">
@@ -233,12 +210,12 @@
                                     </div>
                                     <div class="col-md-4 col-sm-12 mb-3">
                                         <div class="form-group">
-                                            <label>Employment Type</label>
+                                            <label class="form-label">Employment Type</label>
                                             <select class="form-control select " name="employment_type" data-toggle="select2" id="employment_type">
                                                 <option value="">:::SELECT:::</option>
-                                                <option value="Full Time" @if(old('employment_date')=='Full Time' ) selected @endif>Full Time</option>
-                                                <option value="Part Time" @if(old('employment_date')=='Part Time' ) selected @endif>Part Time</option>
-                                                <option value="Contract" @if(old('employment_date')=='Contract' ) selected @endif>Contract</option>
+                                                <option value="Full Time" @if($user->employment_type == 'Full Time') selected @endif>Full Time</option>
+                                                <option value="Part Time" @if($user->employment_type == 'Part Time') selected @endif>Part Time</option>
+                                                <option value="Contract" @if($user->employment_type == 'Contract') selected @endif>Contract</option>
                                             </select>
                                             @if ($errors->has('employment_type'))
                                             <span class="text-danger font-weight-bold" role="alert">
@@ -249,11 +226,11 @@
                                     </div>
                                     <div class="col-md-4 col-sm-12 mb-3">
                                         <div class="form-group">
-                                            <label>Business Entity</label>
+                                            <label class="form-label">Business Entity</label>
                                             <select class="form-control select" name="business_id" data-toggle="select2" id="business_id">
                                                 <option value="">:::SELECT:::</option>
                                                 @foreach ($businesses as $row)
-                                                <option value="{{ $row->id }}" @if(old('business_id')==strval($row->id)) selected @endif>{{ $row->business_name }}</option>
+                                                <option value="{{ $row->id }}" @if($user->business_id == strval($row->id)) selected @endif>{{ $row->business_name }}</option>
                                                 @endforeach
                                             </select>
                                             @if ($errors->has('business_id'))
@@ -265,8 +242,8 @@
                                     </div>
                                     <div class="col-md-4 col-sm-12 mb-3">
                                         <div class="form-group">
-                                            <label>Entry Salary</label>
-                                            <input type="number" class="form-control" name="entry_salary" value="{{ old('entry_salary') }}" placeholder="Entry Salary" autocomplete="off" id="entry_salary">
+                                            <label class="form-label">Entry Salary</label>
+                                            <input type="number" class="form-control" name="entry_salary" value="{{ $user->entry_salary }}" placeholder="Entry Salary" autocomplete="off" id="entry_salary">
                                         </div>
                                         @if ($errors->has('entry_salary'))
                                         <span class="text-danger font-weight-bold" role="alert">
@@ -276,8 +253,8 @@
                                     </div>
                                     <div class="col-md-4 col-sm-12 mb-3">
                                         <div class="form-group">
-                                            <label>Current Salary(NAIRA)</label>
-                                            <input type="number" class="form-control" name="current_salary" value="{{ old('current_salary') }}" placeholder="Current Salary(NAIRA)" autocomplete="off" id="current_salary">
+                                            <label class="form-label">Current Salary(NAIRA)</label>
+                                            <input type="number" class="form-control" name="current_salary" value="{{ $user->current_salary }}" placeholder="Current Salary(NAIRA)" autocomplete="off" id="current_salary">
                                         </div>
                                         @if ($errors->has('current_salary'))
                                         <span class="text-danger font-weight-bold" role="alert">
@@ -287,8 +264,8 @@
                                     </div>
                                     <div class="col-md-4 col-sm-12 mb-3">
                                         <div class="form-group">
-                                            <label>Current Salary(USD)</label>
-                                            <input type="number" class="form-control" name="current_usd_salary" value="{{ old('current_usd_salary') }}" placeholder="Current Salary(USD)" autocomplete="off" id="current_usd_salary">
+                                            <label class="form-label">Current Salary(USD)</label>
+                                            <input type="number" class="form-control" name="current_usd_salary" value="{{ $user->current_usd_salary }}" placeholder="Current Salary(USD)" autocomplete="off" id="current_usd_salary">
                                         </div>
                                         @if ($errors->has('current_usd_salary'))
                                         <span class="text-danger font-weight-bold" role="alert">
@@ -298,8 +275,8 @@
                                     </div>
                                     <div class="col-md-4 col-sm-12 mb-3">
                                         <div class="form-group">
-                                            <label>Last Increment</label>
-                                            <input type="number" class="form-control" name="last_increment" value="{{ old('last_increment') }}" placeholder="Last Increment" autocomplete="off" id="last_increment">
+                                            <label class="form-label">Last Increment</label>
+                                            <input type="number" class="form-control" name="last_increment" value="{{ $user->last_increment }}" placeholder="Last Increment" autocomplete="off" id="last_increment">
                                         </div>
                                         @if ($errors->has('last_increment'))
                                         <span class="text-danger font-weight-bold" role="alert">
@@ -309,8 +286,8 @@
                                     </div>
                                     <div class="col-md-4 col-sm-12 mb-3">
                                         <div class="form-group">
-                                            <label>Last Increment Date</label>
-                                            <input type="date" class="form-control date-picker" name="last_increment_date" value="{{ old('last_increment_date') }}" placeholder="Last Increment Date" autocomplete="off" id="last_increment_date">
+                                            <label class="form-label">Last Increment Date</label>
+                                            <input type="date" class="form-control date-picker" name="last_increment_date" value="{{ $user->last_increment_date }}" placeholder="Last Increment Date" autocomplete="off" id="last_increment_date">
                                         </div>
                                         @if ($errors->has('last_increment_date'))
                                         <span class="text-danger font-weight-bold" role="alert">
@@ -320,8 +297,8 @@
                                     </div>
                                     <div class="col-md-4 col-sm-12 mb-3">
                                         <div class="form-group">
-                                            <label>Last Promotion Date</label>
-                                            <input class="form-control date-picker" name="last_promotion" value="{{ old('last_promotion') }}" placeholder="Select Date" type="date" id="last_promotion" />
+                                            <label class="form-label">Last Promotion Date</label>
+                                            <input class="form-control date-picker" name="last_promotion" value="{{ $user->last_promotion }}" placeholder="Select Date" type="date" id="last_promotion" />
                                         </div>
                                         @if ($errors->has('last_promotion'))
                                         <span class="text-danger font-weight-bold" role="alert">
@@ -330,20 +307,20 @@
                                         @endif
                                     </div>
 
-                                    <div class="form-group col-md-4 col-sm-12 mb-3">
+                                    <div class="col-md-4 col-sm-12 mb-3">
                                         <label class="form-label">Staff Passport</label>
-                                        <input type="file" name="photo" id="photo" onchange="handleFileInput('photo', 'preview');">
-                                        <img src="" id="preview" alt="Passport Preview" width="100px" height="100px" style="display: none;">
+                                        <input type="file" name="photo"  id="photo" onchange="handleFileInput('photo', 'preview');">
+                                        <img src="/{{ $user->photo }}" id="preview" alt="Passport Preview" width="100px" height="100px" style="display: block;">
                                         @if ($errors->has('photo'))
                                         <span class="text-danger font-weight-bold" role="alert">
                                             {{ $errors->first('photo') }}
                                         </span>
                                         @endif
                                     </div>
-                                    <div class="form-group col-md-4 col-sm-12 p-3">
+                                    <div class="col-md-4 col-sm-12 mb-3">
                                         <label class="form-label">Staff ID</label>
-                                        <input type="file" name="staff_id_card" id="staff_id_card" onchange="handleFileInput('staff_id_card', 'preview-2');">
-                                        <img src="" id="preview-2" alt="ID Preview" width="100px" height="100px" style="display: none;">
+                                        <input type="file" name="staff_id_card" class="form-control" id="staff_id_card" onchange="handleFileInput('staff_id_card', 'preview-2');">
+                                        <img src="/{{ $user->staff_id_card }}" id="preview-2" alt="ID Preview" width="100px" height="100px" style="display: block;">
                                         @if ($errors->has('staff_id_card'))
                                         <span class="text-danger font-weight-bold" role="alert">
                                             {{ $errors->first('staff_id_card') }}
@@ -359,8 +336,8 @@
                                     <div class="row">
                                         <div class="col-md-4 col-sm-12 p-3">
                                             <div class="form-group">
-                                                <label>Account Number</label>
-                                                <input type="number" class="form-control" name="bank_account_no" value="{{ old('bank_account_no') }}" placeholder="Account Number" autocomplete="off" id="bank_account_no">
+                                                <label class="form-label">Account Number</label>
+                                                <input type="number" class="form-control" name="bank_account_no" value="{{ $user->bank_account_no }}" placeholder="Account Number" autocomplete="off" id="bank_account_no">
                                             </div>
                                             @if ($errors->has('bank_account_no'))
                                             <span class="text-danger font-weight-bold" role="alert">
@@ -370,12 +347,12 @@
                                         </div>
                                         <div class="col-md-4 col-sm-12 p-3">
                                             <div class="form-group">
-                                                <label>Bank Name</label>
+                                                <label class="form-label">Bank Name</label>
                                                 <select class="form-control select" name="bank_code" id="bank_code" onchange="getBankAccount()" data-toggle="select2">
                                                     <option value="">:::SELECT:::</option>
                                                     @foreach ($banks as $row)
                                                    
-                                                    <option value="{{ $row->bank_code }}" @if(old('bank_code')==strval($row->id) || old('bank_code') == strval($row->bank_code)) selected @endif>{{ $row->bank_name }}</option>
+                                                    <option value="{{ $row->bank_code }}" @if($user->bank_code == strval($row->bank_code)) selected @endif>{{ $row->bank_name }}</option>
 
                                                     @endforeach
                                                 </select>
@@ -389,8 +366,8 @@
 
                                         <div class="col-md-4 col-sm-12 p-3">
                                             <div class="form-group">
-                                                <label>Account Name <i class="fa fa-spinner fa-spin" id="spinner" style="display: none;"></i></label>
-                                                <input type="text" class="form-control" name="bank_account_name" onblur="getBankAccount()" value="{{ old('bank_account_name') }}" placeholder="Account Name" id="bank_account_name" autocomplete="off" readonly>
+                                                <label class="form-label">Account Name <i class="fa fa-spinner fa-spin" id="spinner" style="display: none;"></i></label>
+                                                <input type="text" class="form-control" name="bank_account_name" onblur="getBankAccount()" value="{{ $user->bank_account_name }}" placeholder="Account Name" id="bank_account_name" autocomplete="off" readonly>
                                             </div>
                                             @if ($errors->has('bank_account_name'))
                                             <span class="text-danger font-weight-bold" role="alert">
@@ -403,22 +380,22 @@
                                             <h4 for=""><b>Login Days</b></h4>
                                         </div>
                                         <div class="form-group col-lg-12 col-md-12 col-sm-12 pb-0" id="login_days">
-                                            <label class="form-label" id="day1"><input type="checkbox" value="1" name="day_1" checked> Sunday</label>
-                                            <label class="form-label" id="day2"><input type="checkbox" value="1" name="day_2" checked> Monday</label>
-                                            <label class="form-label" id="day3"><input type="checkbox" value="1" name="day_3" checked> Tuesday</label>
-                                            <label class="form-label" id="day4"><input type="checkbox" value="1" name="day_4" checked> Wednesday</label>
-                                            <label class="form-label" id="day5"><input type="checkbox" value="1" name="day_5" checked> Thursday</label>
-                                            <label class="form-label" id="day6"><input type="checkbox" value="1" name="day_6" checked> Friday</label>
-                                            <label class="form-label" id="day7"><input type="checkbox" value="1" name="day_7" checked> Saturday</label>
+                                            <label class="form-label" id="day1"><input type="checkbox" value="1" name="day_1" @if($user->day_1 == '1') checked @endif> Sunday</label>
+                                            <label class="form-label" id="day2"><input type="checkbox" value="1" name="day_2" @if($user->day_2 == '1') checked @endif> Monday</label>
+                                            <label class="form-label" id="day3"><input type="checkbox" value="1" name="day_3" @if($user->day_3 == '1') checked @endif> Tuesday</label>
+                                            <label class="form-label" id="day4"><input type="checkbox" value="1" name="day_4" @if($user->day_4 == '1') checked @endif> Wednesday</label>
+                                            <label class="form-label" id="day5"><input type="checkbox" value="1" name="day_5" @if($user->day_5 == '1') checked @endif> Thursday</label>
+                                            <label class="form-label" id="day6"><input type="checkbox" value="1" name="day_6" @if($user->day_6 == '1') checked @endif> Friday</label>
+                                            <label class="form-label" id="day7"><input type="checkbox" value="1" name="day_7" @if($user->day_7 == '1') checked @endif> Saturday</label>
                                         </div>
 
                                         <div class="col-lg-12 col-md-12 col-sm-12 py-3">
                                             <h4 for=""><b>Security Settings</b></h4>
                                         </div>
                                         <div class="col-lg-12 col-md-12 col-sm-12">
-                                            <label class="form-label" id="user_disabled"><input type="checkbox" value="1" name="user_disabled" id="day1"> Disable User</label><br>
-                                            <label class="form-label" id="user_locked"><input type="checkbox" value="1" name="user_locked" id="day1"> Lock User</label><br>
-                                            <label class="form-label" id="passchg_logon"><input type="checkbox" value="1" name="passchg_logon" checked id="passchg_logon"> Change password on first login</label>
+                                            <label class="form-label" id="user_disabled"><input type="checkbox" value="1" name="user_disabled" id="user_disabled" @if($user->user_disabled == '1') checked @endif> Disable User</label><br>
+                                            <label class="form-label" id="user_locked"><input type="checkbox" value="1" name="user_locked" id="user_locked" @if($user->user_locked == '1') checked @endif> Lock User</label><br>
+                                            <label class="form-label" id="passchg_logon"><input type="checkbox" value="1" name="passchg_logon"  id="passchg_logon" @if($user->passchg_logon == '1') checked @endif> Change password on first login</label>
                                         </div>
 
                                     </div>

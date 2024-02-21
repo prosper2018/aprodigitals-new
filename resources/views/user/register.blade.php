@@ -139,7 +139,7 @@
                                     </div>
 
                                     <div class="col-md-6 mb-3">
-                                        <label for="dob" class="col-md-4 col-form-label text-md-end">{{ __('Date of Birth') }}</label>
+                                        <label for="dob" class="col-form-label">{{ __('Date of Birth') }}</label>
 
                                         <input id="dob" type="date" class="form-control" name="dob" value="{{ old('dob') }}" autocomplete="dob">
                                         @if ($errors->has('dob'))
@@ -150,7 +150,7 @@
                                     </div>
                                     <div class="col-md-12 col-sm-12 mb-3">
                                         <div class="form-group">
-                                            <label>Address</label>
+                                            <label class="form-label">Address</label>
                                             <textarea class="form-control" role="2" name="contact_address" style="height: 80px !important;" id="contact_address">{{ old('contact_address') }}</textarea>
                                             @if ($errors->has('contact_address'))
                                             <span class="text-danger font-weight-bold" role="alert">
@@ -161,7 +161,7 @@
                                     </div>
                                     <div class="col-md-4 col-sm-12 mb-3">
                                         <div class="form-group">
-                                            <label>Nationality</label>
+                                            <label class="form-label">Nationality</label>
 
                                             <select class="form-control select " name="nationality" data-toggle="select2" id="nationality">
                                                 <option value="">:::SELECT:::</option>
@@ -178,7 +178,7 @@
                                     </div>
                                     <div class="col-md-4 col-sm-12 mb-3">
                                         <div class="form-group">
-                                            <label>Religion</label>
+                                            <label class="form-label">Religion</label>
                                             <select class="form-control select " name="religion" data-toggle="select2" id="religion">
                                                 <option value="">:::SELECT:::</option>
                                                 @foreach ($religions as $row)
@@ -194,7 +194,7 @@
                                     </div>
                                     <div class="col-md-4 col-sm-12 mb-3">
                                         <div class="form-group">
-                                            <label>Martital Status</label>
+                                            <label class="form-label">Martital Status</label>
                                             <select class="form-control select " name="marital_status" data-toggle="select2" id="marital_status">
                                                 <option value="">:::SELECT:::</option>
                                                 <option value="Single" @if(old('marital_status')=='Single' ) selected @endif>Single</option>
@@ -211,7 +211,7 @@
                                     </div>
                                     <div class="col-md-4 col-sm-12 mb-3">
                                         <div class="form-group">
-                                            <label>Employment Date</label>
+                                            <label class="form-label">Employment Date</label>
                                             <input class="form-control date-picker" name="employment_date" value="{{ old('employment_date') }}" placeholder="Select Date" type="date" id="employment_date" />
                                         </div>
                                         @if ($errors->has('employment_date'))
@@ -222,7 +222,7 @@
                                     </div>
                                     <div class="col-md-4 col-sm-12 mb-3">
                                         <div class="form-group">
-                                            <label>Termination Date</label>
+                                            <label class="form-label">Termination Date</label>
                                             <input class="form-control date-picker" name="termination_date" value="{{ old('termination_date') }}" placeholder="Select Date" type="date" id="termination_date" />
                                         </div>
                                         @if ($errors->has('termination_date'))
@@ -233,7 +233,7 @@
                                     </div>
                                     <div class="col-md-4 col-sm-12 mb-3">
                                         <div class="form-group">
-                                            <label>Employment Type</label>
+                                            <label class="form-label">Employment Type</label>
                                             <select class="form-control select " name="employment_type" data-toggle="select2" id="employment_type">
                                                 <option value="">:::SELECT:::</option>
                                                 <option value="Full Time" @if(old('employment_date')=='Full Time' ) selected @endif>Full Time</option>
@@ -249,7 +249,7 @@
                                     </div>
                                     <div class="col-md-4 col-sm-12 mb-3">
                                         <div class="form-group">
-                                            <label>Business Entity</label>
+                                            <label class="form-label">Business Entity</label>
                                             <select class="form-control select" name="business_id" data-toggle="select2" id="business_id">
                                                 <option value="">:::SELECT:::</option>
                                                 @foreach ($businesses as $row)
@@ -265,7 +265,7 @@
                                     </div>
                                     <div class="col-md-4 col-sm-12 mb-3">
                                         <div class="form-group">
-                                            <label>Entry Salary</label>
+                                            <label class="form-label">Entry Salary</label>
                                             <input type="number" class="form-control" name="entry_salary" value="{{ old('entry_salary') }}" placeholder="Entry Salary" autocomplete="off" id="entry_salary">
                                         </div>
                                         @if ($errors->has('entry_salary'))
@@ -276,7 +276,7 @@
                                     </div>
                                     <div class="col-md-4 col-sm-12 mb-3">
                                         <div class="form-group">
-                                            <label>Current Salary(NAIRA)</label>
+                                            <label class="form-label">Current Salary(NAIRA)</label>
                                             <input type="number" class="form-control" name="current_salary" value="{{ old('current_salary') }}" placeholder="Current Salary(NAIRA)" autocomplete="off" id="current_salary">
                                         </div>
                                         @if ($errors->has('current_salary'))
@@ -287,7 +287,7 @@
                                     </div>
                                     <div class="col-md-4 col-sm-12 mb-3">
                                         <div class="form-group">
-                                            <label>Current Salary(USD)</label>
+                                            <label class="form-label">Current Salary(USD)</label>
                                             <input type="number" class="form-control" name="current_usd_salary" value="{{ old('current_usd_salary') }}" placeholder="Current Salary(USD)" autocomplete="off" id="current_usd_salary">
                                         </div>
                                         @if ($errors->has('current_usd_salary'))
@@ -298,7 +298,7 @@
                                     </div>
                                     <div class="col-md-4 col-sm-12 mb-3">
                                         <div class="form-group">
-                                            <label>Last Increment</label>
+                                            <label class="form-label">Last Increment</label>
                                             <input type="number" class="form-control" name="last_increment" value="{{ old('last_increment') }}" placeholder="Last Increment" autocomplete="off" id="last_increment">
                                         </div>
                                         @if ($errors->has('last_increment'))
@@ -309,7 +309,7 @@
                                     </div>
                                     <div class="col-md-4 col-sm-12 mb-3">
                                         <div class="form-group">
-                                            <label>Last Increment Date</label>
+                                            <label class="form-label">Last Increment Date</label>
                                             <input type="date" class="form-control date-picker" name="last_increment_date" value="{{ old('last_increment_date') }}" placeholder="Last Increment Date" autocomplete="off" id="last_increment_date">
                                         </div>
                                         @if ($errors->has('last_increment_date'))
@@ -320,7 +320,7 @@
                                     </div>
                                     <div class="col-md-4 col-sm-12 mb-3">
                                         <div class="form-group">
-                                            <label>Last Promotion Date</label>
+                                            <label class="form-label">Last Promotion Date</label>
                                             <input class="form-control date-picker" name="last_promotion" value="{{ old('last_promotion') }}" placeholder="Select Date" type="date" id="last_promotion" />
                                         </div>
                                         @if ($errors->has('last_promotion'))
@@ -330,9 +330,9 @@
                                         @endif
                                     </div>
 
-                                    <div class="form-group col-md-4 col-sm-12 mb-3">
+                                    <div class="col-md-4 col-sm-12 mb-3">
                                         <label class="form-label">Staff Passport</label>
-                                        <input type="file" name="photo" id="photo" onchange="handleFileInput('photo', 'preview');">
+                                        <input type="file" name="photo" class="form-control" id="photo" onchange="handleFileInput('photo', 'preview');">
                                         <img src="" id="preview" alt="Passport Preview" width="100px" height="100px" style="display: none;">
                                         @if ($errors->has('photo'))
                                         <span class="text-danger font-weight-bold" role="alert">
@@ -340,9 +340,9 @@
                                         </span>
                                         @endif
                                     </div>
-                                    <div class="form-group col-md-4 col-sm-12 p-3">
+                                    <div class="col-md-4 col-sm-12 mb-3">
                                         <label class="form-label">Staff ID</label>
-                                        <input type="file" name="staff_id_card" id="staff_id_card" onchange="handleFileInput('staff_id_card', 'preview-2');">
+                                        <input type="file" name="staff_id_card" class="form-control" id="staff_id_card" onchange="handleFileInput('staff_id_card', 'preview-2');">
                                         <img src="" id="preview-2" alt="ID Preview" width="100px" height="100px" style="display: none;">
                                         @if ($errors->has('staff_id_card'))
                                         <span class="text-danger font-weight-bold" role="alert">
@@ -359,7 +359,7 @@
                                     <div class="row">
                                         <div class="col-md-4 col-sm-12 p-3">
                                             <div class="form-group">
-                                                <label>Account Number</label>
+                                                <label class="form-label">Account Number</label>
                                                 <input type="number" class="form-control" name="bank_account_no" value="{{ old('bank_account_no') }}" placeholder="Account Number" autocomplete="off" id="bank_account_no">
                                             </div>
                                             @if ($errors->has('bank_account_no'))
@@ -370,7 +370,7 @@
                                         </div>
                                         <div class="col-md-4 col-sm-12 p-3">
                                             <div class="form-group">
-                                                <label>Bank Name</label>
+                                                <label class="form-label">Bank Name</label>
                                                 <select class="form-control select" name="bank_code" id="bank_code" onchange="getBankAccount()" data-toggle="select2">
                                                     <option value="">:::SELECT:::</option>
                                                     @foreach ($banks as $row)
@@ -389,7 +389,7 @@
 
                                         <div class="col-md-4 col-sm-12 p-3">
                                             <div class="form-group">
-                                                <label>Account Name <i class="fa fa-spinner fa-spin" id="spinner" style="display: none;"></i></label>
+                                                <label class="form-label">Account Name <i class="fa fa-spinner fa-spin" id="spinner" style="display: none;"></i></label>
                                                 <input type="text" class="form-control" name="bank_account_name" onblur="getBankAccount()" value="{{ old('bank_account_name') }}" placeholder="Account Name" id="bank_account_name" autocomplete="off" readonly>
                                             </div>
                                             @if ($errors->has('bank_account_name'))

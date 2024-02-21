@@ -247,4 +247,149 @@ class UserController extends Controller
 
         return redirect()->route('login')->with('success', 'Your email has been verified. You can now login.');
     }
+
+    public function edit(User $user)
+    {
+        $position_details = Position::select('position_name', 'position_id')->where(['position_id' => $user->position_id])->first();
+        $country_codes = CountryCode::all();
+        $banks = Bank::all();
+        $religions = Religion::all();
+        $businesses = BusinessDetails::select(['id', 'business_name'])->where(['is_deleted' => '0'])->get();
+        $departments = Department::select(['id', 'display_name'])->where(['is_deleted' => '0'])->get();
+        return view('user.edit', compact('businesses', 'banks', 'departments', 'country_codes', 'religions', 'user', 'position_details'));
+    }
+
+
+    public function update(Request $request, $id)
+    {
+        $user = User::find($id);
+
+        if ($request->has('photo')) {
+            $validator = Validator::make($request->all(), [
+                'photo' => ['required', 'image', 'mimes:jpeg,png,jpg,gif,svg', 'max:200'],
+            ]);
+
+            if ($validator->fails()) {
+                return redirect()->route('users.edit', ['user' => $user->id])
+                    ->withErrors($validator->errors());
+            }
+
+            // Upload the image to the specified directory
+            $imageName = str_replace(' ', '_', $user->username) . '_' . time() . '.' . $request->photo->extension();
+            $request->photo->move(public_path('photos'), $imageName);
+            $path = 'photos/' . $imageName;
+
+            if (file_exists($user->photo)) {
+                unlink($user->photo);
+            }
+        } else {
+            $path = $user->photo;
+        }
+
+        if ($request->has('staff_id_card')) {
+            $validator = Validator::make($request->all(), [
+                'staff_id_card' => ['required', 'image', 'mimes:jpeg,png,jpg,gif,svg', 'max:200'],
+            ]);
+
+            if ($validator->fails()) {
+                return redirect()->route('users.edit', ['user' => $user->id])
+                    ->withErrors($validator->errors());
+            }
+
+            // Upload the image to the specified directory
+            $imageName = str_replace(' ', '_', $user->username) . '_' . time() . '.' . $request->staff_id_card->extension();
+            $request->staff_id_card->move(public_path('staffIDs'), $imageName);
+            $staff_id_card_path = 'staffIDs/' . $imageName;
+
+            if (file_exists($user->staff_id_card)) {
+                unlink($user->staff_id_card);
+            }
+        } else {
+            $staff_id_card_path = $user->staff_id_card;
+        }
+
+        $validator = Validator::make(
+            $request->all(),
+            [
+                'department_id' => ['required'],
+                'position_id' => ['required'],
+                'gender' => ['required'],
+                'dob' => ['required'],
+                'contact_address' => ['required'],
+                'nationality' => ['required'],
+                'religion' => ['required'],
+                'marital_status' => ['required'],
+                'employment_date' => ['required'],
+                'termination_date' => ['required'],
+                'employment_type' => ['required'],
+                'business_id' => ['required'],
+                'entry_salary' => ['required'],
+                'current_salary' => ['required', 'numeric', 'min:0'],
+                'current_usd_salary' => ['required', 'numeric', 'min:0'],
+                'last_increment' => ['required', 'numeric', 'min:0'],
+                'last_increment_date' => ['required'],
+                'last_promotion' => ['required'],
+                'bank_account_no' => ['required', 'numeric'],
+                'bank_code' => ['required'],
+                'bank_account_name' => ['required'],
+                'firstname' => ['required', 'string', 'max:100'],
+                'lastname' => ['required', 'string', 'max:100'],
+                'email' => ['required', 'string', 'email', 'max:255', 'unique:users,email,' . $id],
+                'mobile_phone' => ['required', 'numeric', 'min:11', 'unique:users,mobile_phone,' . $id],
+            ]
+        );
+
+        if ($validator->fails()) {
+            return redirect()->route('users.edit', ['user' => $user->id])
+                ->withErrors($validator->errors());
+        }
+
+        $data = [
+            'email' => $request->email,
+            'position_id' => $request->position_id,
+            'department_id' => $request->department_id,
+            'dob' => $request->dob,
+            'contact_address' => $request->contact_address,
+            'nationality' => $request->nationality,
+            'religion' => $request->religion,
+            'marital_status' => $request->marital_status,
+            'employment_date' => $request->employment_date,
+            'termination_date' => $request->termination_date,
+            'employment_type' => $request->employment_type,
+            'business_id' => $request->business_id,
+            'entry_salary' => $request->entry_salary,
+            'current_salary' => $request->current_salary,
+            'current_usd_salary' => $request->current_usd_salary,
+            'last_increment' => $request->last_increment,
+            'last_increment_date' => $request->last_increment_date,
+            'last_promotion' => $request->last_promotion,
+            'photo' => $path,
+            'staff_id_card' => $staff_id_card_path,
+            'bank_account_no' => $request->bank_account_no,
+            'bank_code' => $request->bank_code,
+            'bank_account_name' => $request->bank_account_name,
+            'firstname' => $request->firstname,
+            'lastname' => $request->lastname,
+            'mobile_phone' => $request->mobile_phone,
+            'passchg_logon' => isset($request->passchg_logon) ? 1 : 0,
+            'user_locked' => isset($request->user_locked) ? 1 : 0,
+            'day_1' => isset($request->day_1) ? 1 : 0,
+            'day_2' => isset($request->day_1) ? 1 : 0,
+            'day_3' => isset($request->day_1) ? 1 : 0,
+            'day_4' => isset($request->day_1) ? 1 : 0,
+            'day_5' => isset($request->day_1) ? 1 : 0,
+            'day_6' => isset($request->day_1) ? 1 : 0,
+            'day_7' => isset($request->day_1) ? 1 : 0,
+            // 'staff_id' => $request->staff_id,
+            'gender' => $request->gender,
+        ];
+
+        $update = $user->update($data);
+
+        if ($update > 0) {
+            return redirect()->route('users.edit', ['user' => $user->id])->with('success', 'User Details updated successfully!');
+        } else {
+            return redirect()->route('users.edit', ['user' => $user->id])->with('error', 'User Details could not be updated at the momment!');
+        }
+    }
 }
