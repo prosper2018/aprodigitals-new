@@ -11,7 +11,7 @@
 	<meta name="author" content="aprodigitals">
 	<meta name="csrf-token" content="{{ csrf_token() }}">
 
-	<title>Dashboard | APRODIGITALS</title>
+	<title> @yield('title') </title>
 
 	<link rel="canonical" href="/dashboard" />
 	<link rel="shortcut icon" href="/assets/img/logo-removebg-preview.png">

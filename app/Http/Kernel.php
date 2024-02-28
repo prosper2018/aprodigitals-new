@@ -72,5 +72,6 @@ class Kernel extends HttpKernel
         'clients' => \App\Http\Middleware\Clients::class,
         'system_admin' => \App\Http\Middleware\SystemAdmin::class,
         'super_admin' => \App\Http\Middleware\SuperAdmin::class,
+        'ensureOtpVerified' => \App\Http\Middleware\EnsureOtpVerified::class,
     ];
 }

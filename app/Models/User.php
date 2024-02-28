@@ -31,7 +31,6 @@ class User extends Authenticatable
         'pass_expire',
         'pass_dateexpire',
         'pass_change',
-        'reset_pwd_link',
         'user_disabled',
         'user_locked',
         'day_1',
@@ -78,10 +77,10 @@ class User extends Authenticatable
         'recalled_by',
         'recalled_on',
         'mfa_otp',
-        'is_email_verified',
-        'email_token',
         'mfa_type',
-        'otp_date',
+        'email_token',
+        'otp_verified',
+        'otp_generated_at',
         'marital_status',
         'employment_date',
         'termination_date',
@@ -119,4 +118,9 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
+
+    public function isOtpVerified()
+    {
+        return ($this->otp_verified === 1);
+    }
 }

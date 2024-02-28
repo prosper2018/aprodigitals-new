@@ -492,7 +492,7 @@
           searchable: false,
           orderable: false,
           render: function(data, type, row) {
-            return '<a data-id="' + row.id + '" href="/admin/users/' + row.id + '/edit" class="edit btn btn-success btn-sm">Edit</a><button data-id="{{ "' + row.id + '"}}" class="delete  btn btn-danger btn-sm" onclick="delete_user(this)">Delete</button>';
+            return '<a data-id="' + row.id + '" href="/admin/users/' + row.id + '/edit" class="edit btn btn-success btn-sm">Edit</a>&nbsp;&nbsp;<a data-id="' + row.id + '" href="/admin/users/' + row.id + '/profile-view" class="edit btn btn-success btn-sm">View</a>&nbsp;&nbsp;<button data-id="{{ "' + row.id + '"}}" class="delete  btn btn-danger btn-sm" onclick="delete_user(this)">Delete</button>';
           }
         },
         {

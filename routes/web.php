@@ -20,8 +20,8 @@ use App\Http\Controllers\UserController;
 |
 */
 
-Route::middleware('system_admin')->group(function () {
-   Route::get('dashboard', [DashboardController::class, 'index'])->middleware(['auth', 'system_admin'])->name('dashboard');
+Route::middleware(['system_admin', 'ensureOtpVerified'])->group(function () {
+   Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
    Route::get('registration', [LoginController::class, 'registration'])->name('register-user');
    Route::post('custom-registration', [LoginController::class, 'customRegistration'])->name('register.custom');
    Route::get('/profile', [DashboardController::class, 'profile']);
@@ -54,10 +54,18 @@ Route::middleware('system_admin')->group(function () {
    Route::get('/user', [UserController::class, 'index'])->name('user.form');
    Route::get('/user/create', [UserController::class, 'create'])->name('user.register');
    Route::post('/user/store', [UserController::class, 'store'])->name('user.store');
-   Route::get('/admin/users', [UserController::class, 'view']);
    Route::get('/admin/users/list', [UserController::class, 'viewall'])->name('admin.users');
    Route::get('/admin/users/{user}/edit', [UserController::class, 'edit'])->name('users.edit'); //shows edit form
+   Route::get('/admin/users/{user}/profile-view', [UserController::class, 'viewProfile'])->name('users.profile'); //shows edit form
    Route::put('/admin/users/{id}', [UserController::class, 'update'])->name('users.update');
+   Route::post('/import-users', [UserController::class, 'import'])->name('import.users');
+   Route::get('/admin/users-upload', [UserController::class, 'bulkUploadForm'])->name('user.upload-form');
+   Route::get('/users-template', function () {
+      $pathToFile = public_path('templates/users_data_template.xlsx'); // Adjust the path and filename as needed
+      return response()->download($pathToFile, 'users_data_template.xlsx');
+  })->name('users.template');
+  
+
 
    Route::get('/positions', [RoleController::class, 'index'])->name('positions.index');
    Route::get('/positions/create', [RoleController::class, 'create'])->name('positions.create');
@@ -91,6 +99,8 @@ Route::get('/account-validation', [UserController::class, 'validateAccountNumber
 Route::get('/verify/{token}', [UserController::class, 'verify'])->name('verify');
 Route::get('/resend-activation', [LoginController::class, 'resendMail'])->name('resend.activation.form');
 Route::post('/resend-activation-mail', [LoginController::class, 'resendActivationMail'])->name('resend.activation.mail');
+Route::get('/otp-verification', [LoginController::class, 'otpForm'])->name('otp.verify.form');
+Route::post('/otp-verify', [LoginController::class, 'verifyOtp'])->name('otp.verify');
 Route::get('/contact', [\App\Http\Controllers\SendEmailController::class, 'index'])->name('contact');
 Route::post('/contact/send', [\App\Http\Controllers\SendEmailController::class, 'send'])->name('contact.email');
 

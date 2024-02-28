@@ -19,7 +19,7 @@
             </div>
             <div class="col-6 text-end">
                 <p class="mb-0">
-                    &copy; {{ date("Y") }} - <a href="index.html" class="text-muted">AppStack</a>
+                    &copy; {{ date("Y") }} - <a href="/" class="text-muted">{{ config("app.name") }}</a>
                 </p>
             </div>
         </div>

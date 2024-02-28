@@ -16,7 +16,9 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 use App\Events\UserLoggedIn;
 use App\Notifications\SendVerificationEmailNotification;
-
+use PragmaRX\Google2FA\Google2FA;
+use App\Notifications\SendOTPEmailNotification;
+use Carbon\Carbon;
 
 class LoginController extends Controller
 {
@@ -28,6 +30,11 @@ class LoginController extends Controller
     public function resendMail()
     {
         return view('auth.resend-activation-mail');
+    }
+
+    public function otpForm()
+    {
+        return view('auth.verify_otp');
     }
 
 
@@ -197,6 +204,9 @@ class LoginController extends Controller
             } elseif ($user_info->passchg_logon == '1') {
                 //Change Password on Logon
                 $label = "17";
+            } elseif ($user_info->is_mfa == '1') {
+                //requires otp to login
+                $label = "19";
             } else {
                 //Login Successful
                 $label = 1;
@@ -317,6 +327,10 @@ class LoginController extends Controller
                 $code = '403';
                 $message = 'You have not verified your email. Please, go to your email to verify your account or request for a new activation link  if you did not receive the verification email.';
                 break;
+            case '19':
+                $code = '429';
+                $message = 'You require otp t login. Please, go to your email to retrieve the otp and proceed with the login.';
+                break;
             default:
                 $code = '403';
                 $message = 'Unable to proceed at the moment. Kindly try again later.';
@@ -330,6 +344,35 @@ class LoginController extends Controller
         } elseif ($code == '400') {
             return redirect()->intended('pwd-chng-on-logon')
                 ->withSuccess($message);
+        } elseif ($code == '429') {
+
+            $secretKey = rand(100000, 999999);
+
+            //$user = Auth::user();
+            $user = User::find(auth()->user()->id);
+            $user->update(['mfa_otp' => $secretKey, 'otp_generated_at' => NOW(), 'otp_verified' => false]);
+
+            $appName = env("APP_NAME");
+
+            // Send verification email
+            $email_message = '<p>Hello ' . $user->lastname . ',</p>
+        
+            <p>You have requested to verify your account. Please use the following one-time password (OTP) to complete the verification process:</p>
+        
+            <p style="font-size: 24px; font-weight: bold; padding: 10px 20px; background-color: #f5f5f5; border: 1px solid #ddd; border-radius: 5px;">' . $secretKey . '</p>
+        
+            <p>This OTP is valid for a single use and should not be shared with anyone for security reasons.</p>
+        
+            <p>If you did not request this OTP, please disregard this email.</p>
+        
+            <p>Thank you for using our service.</p>
+        
+            <p>Best regards,<br>
+            ' . $appName . '</p>';
+
+            $user->notify(new SendOTPEmailNotification($email_message));
+
+            return redirect()->route('otp.verify.form')->with('success', $message);
         } else {
             return redirect()->route('login')
                 ->with('error', $message);
@@ -444,5 +487,45 @@ class LoginController extends Controller
         $user->notify(new SendVerificationEmailNotification(route('verify', $user->verification_token), $message));
 
         return redirect()->back()->with('success', 'Activation mail resent successfully.');
+    }
+
+    public function verifyOtp(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'otp.*' => 'required|digits:1',
+        ]);
+
+        if ($validator->fails()) {
+            return redirect()->route('otp.verify.form')->withErrors($validator->errors());
+        }
+
+        $otp = implode('', $request->otp);
+
+        $user = auth()->user(); // Retrieve the authenticated user
+
+        $storedOtp = $user->mfa_otp;
+        $otpGeneratedAt = Carbon::parse($user->otp_generated_at);
+
+        // Check if OTP has expired (e.g., 3 minutes validity)
+        $otp_time_arr =  Parameter::select('parameter_value')->where(['parameter_name' => 'otp_time'])->first();
+        $otp_time = intval($otp_time_arr->parameter_value);
+        if ($otpGeneratedAt->addMinutes($otp_time)->isPast()) {
+            // OTP has expired
+            return redirect()->back()->with('error', 'OTP has expired. Please request a new OTP.');
+        }
+
+        if ($otp === $storedOtp) {
+           
+            User::find(auth()->user()->id)->update([
+                'otp_verified' => true
+            ]);
+
+            event(new UserLoggedIn(auth()->user()));
+            return redirect()->intended('dashboard')
+                ->withSuccess('Signed in');
+        } else {
+            // OTP is invalid, reject the login attempt
+            return redirect()->back()->with('error', 'Invalid OTP. Please try again.');
+        }
     }
 }

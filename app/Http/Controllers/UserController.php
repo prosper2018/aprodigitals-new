@@ -18,6 +18,10 @@ use Illuminate\Support\Str;
 use App\Http\Controllers\ThirdPartyApiController;
 use App\Notifications\SendVerificationEmailNotification;
 use Illuminate\Support\Facades\Storage;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Imports\UsersImport; 
+use Illuminate\Validation\ValidationException;
+
 
 class UserController extends Controller
 {
@@ -175,16 +179,17 @@ class UserController extends Controller
             'bank_account_name' => $request->bank_account_name,
             'firstname' => $request->firstname,
             'lastname' => $request->lastname,
+            'display_name' => $request->lastname.' '.$request->firstname,
             'mobile_phone' => $request->mobile_phone,
             'passchg_logon' => isset($request->passchg_logon) ? 1 : 0,
             'user_locked' => isset($request->user_locked) ? 1 : 0,
             'day_1' => isset($request->day_1) ? 1 : 0,
-            'day_2' => isset($request->day_1) ? 1 : 0,
-            'day_3' => isset($request->day_1) ? 1 : 0,
-            'day_4' => isset($request->day_1) ? 1 : 0,
-            'day_5' => isset($request->day_1) ? 1 : 0,
-            'day_6' => isset($request->day_1) ? 1 : 0,
-            'day_7' => isset($request->day_1) ? 1 : 0,
+            'day_2' => isset($request->day_2) ? 1 : 0,
+            'day_3' => isset($request->day_3) ? 1 : 0,
+            'day_4' => isset($request->day_4) ? 1 : 0,
+            'day_5' => isset($request->day_5) ? 1 : 0,
+            'day_6' => isset($request->day_6) ? 1 : 0,
+            'day_7' => isset($request->day_7) ? 1 : 0,
             // 'staff_id' => $request->staff_id,
             'posted_ip' => $request->ip(),
             'gender' => $request->gender,
@@ -220,6 +225,13 @@ class UserController extends Controller
     }
 
 
+    public function bulkUploadForm()
+    {
+        $users = User::all();
+        return view('user.user_upload', ['users' => $users]);
+    }
+
+
     public function viewall(Request $request)
     {
         $data = DB::table('users')->leftJoin('positions', 'users.position_id', '=', 'positions.position_id')
@@ -239,6 +251,7 @@ class UserController extends Controller
         $verify = $user->update([
             'verified' => true,
             'verification_token' => null,
+            'email_verified_at' => NOW(),
         ]);
 
         if (!$verify) {
@@ -257,6 +270,17 @@ class UserController extends Controller
         $businesses = BusinessDetails::select(['id', 'business_name'])->where(['is_deleted' => '0'])->get();
         $departments = Department::select(['id', 'display_name'])->where(['is_deleted' => '0'])->get();
         return view('user.edit', compact('businesses', 'banks', 'departments', 'country_codes', 'religions', 'user', 'position_details'));
+    }
+
+    public function viewProfile(User $user)
+    {
+        $position_details = Position::select('position_name', 'position_id')->where(['position_id' => $user->position_id])->first();
+        $country_codes = CountryCode::all();
+        $banks = Bank::all();
+        $religions = Religion::all();
+        $businesses = BusinessDetails::select(['id', 'business_name'])->where(['is_deleted' => '0'])->get();
+        $departments = Department::select(['id', 'display_name'])->where(['is_deleted' => '0'])->get();
+        return view('user.profile', compact('businesses', 'banks', 'departments', 'country_codes', 'religions', 'user', 'position_details'));
     }
 
 
@@ -370,16 +394,17 @@ class UserController extends Controller
             'bank_account_name' => $request->bank_account_name,
             'firstname' => $request->firstname,
             'lastname' => $request->lastname,
+            'display_name' => $request->lastname.' '.$request->firstname,
             'mobile_phone' => $request->mobile_phone,
             'passchg_logon' => isset($request->passchg_logon) ? 1 : 0,
             'user_locked' => isset($request->user_locked) ? 1 : 0,
             'day_1' => isset($request->day_1) ? 1 : 0,
-            'day_2' => isset($request->day_1) ? 1 : 0,
-            'day_3' => isset($request->day_1) ? 1 : 0,
-            'day_4' => isset($request->day_1) ? 1 : 0,
-            'day_5' => isset($request->day_1) ? 1 : 0,
-            'day_6' => isset($request->day_1) ? 1 : 0,
-            'day_7' => isset($request->day_1) ? 1 : 0,
+            'day_2' => isset($request->day_2) ? 1 : 0,
+            'day_3' => isset($request->day_3) ? 1 : 0,
+            'day_4' => isset($request->day_4) ? 1 : 0,
+            'day_5' => isset($request->day_5) ? 1 : 0,
+            'day_6' => isset($request->day_6) ? 1 : 0,
+            'day_7' => isset($request->day_7) ? 1 : 0,
             // 'staff_id' => $request->staff_id,
             'gender' => $request->gender,
         ];
@@ -390,6 +415,26 @@ class UserController extends Controller
             return redirect()->route('users.edit', ['user' => $user->id])->with('success', 'User Details updated successfully!');
         } else {
             return redirect()->route('users.edit', ['user' => $user->id])->with('error', 'User Details could not be updated at the momment!');
+        }
+    }
+
+    public function import(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'template_file' => 'required|mimes:xlsx,xls,csv',
+        ]);
+
+        if ($validator->fails()) {
+            return redirect()->route('user.upload-form')->withErrors($validator->errors());
+        }
+
+        try {
+            Excel::import(new UsersImport($request->ip(), 1), $request->file('template_file'));
+
+            return redirect()->back()->with('success', 'Users imported successfully.');
+        } catch (ValidationException $e) {
+            $errors = $e->validator->errors();
+            return redirect()->back()->withErrors($errors)->withInput();
         }
     }
 }
