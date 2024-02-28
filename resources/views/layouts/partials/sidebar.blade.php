@@ -60,7 +60,7 @@
                 </a>
                 <ul id="users" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
                     <li class="sidebar-item"><a class="sidebar-link" href="{{ route('user.form') }}">Add New User</a></li>
-                    <li class="sidebar-item"><a class="sidebar-link" href="{{ route('user.upload-form') }}">Users Bulk Upload</a></li>
+                    <li class="sidebar-item"><a class="sidebar-link" href="{{ route('userss.upload-form') }}">Users Bulk Upload</a></li>
                     <li class="sidebar-item"><a class="sidebar-link" href="{{ route('admin.users') }}">View All Users</a></li>
                 </ul>
             </li>
