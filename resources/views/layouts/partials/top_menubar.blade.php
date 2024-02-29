@@ -10,9 +10,13 @@
                 <a class="nav-icon dropdown-toggle d-inline-block d-sm-none" href="#" data-bs-toggle="dropdown">
                     <i class="align-middle" data-feather="settings"></i>
                 </a>
-
+                @php
+                $photo = auth()->user()->photo;
+                $gender = auth()->user()->gender;
+                $avartar = ($gender == 'Male' || $gender == 'male' || $gender == 'MALE') ? 'avartar-m' : 'avartar-f';
+                $photo_path = ($photo != '' && file_exists($photo)) ? "/".auth()->user()->photo : "/assets/img/" . $avartar . '.png' @endphp
                 <a class="nav-link dropdown-toggle d-none d-sm-inline-block" href="#" data-bs-toggle="dropdown">
-                    <img src="/assets/img/avatars/avatar.jpg" class="avatar img-fluid rounded-circle me-1" alt="Chris Wood" /> <span class="text-dark">{{ auth()->user()->firstname." ".auth()->user()->lastname }}</span>
+                    <img src="{{ $photo_path }}" class="avatar img-fluid rounded-circle me-1" alt="{{ auth()->user()->firstname." ".auth()->user()->lastname }}" /> <span class="text-dark">{{ auth()->user()->firstname." ".auth()->user()->lastname }}</span>
                 </a>
                 <div class="dropdown-menu dropdown-menu-end">
                     <a class="dropdown-item" href="/profile"><i class="align-middle me-1" data-feather="user"></i> Profile</a>

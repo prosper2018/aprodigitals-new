@@ -18,9 +18,20 @@
                                 <h5 class="card-title mb-0">Profile Details</h5>
                             </div>
                             <div class="card-body text-center">
-                                <img src="/assets/img/avatars/avatar-4.jpg" alt="Stacie Hall" class="img-fluid rounded-circle mb-2" width="128" height="128" />
-                                <h5 class="card-title mb-0">{{ auth()->user()->firstname." ".auth()->user()->lastname }}</h5>
-                                <div class="text-muted mb-2">{{ $users->position_name }}</div>
+                                <div class="align-items-center text-center" id="content">
+                                    @php
+                                    $photo = $users->photo;
+                                    $gender = $users->gender;
+                                    $avartar = ($gender == 'Male' || $gender == 'male' || $gender == 'MALE') ? 'avartar-m' : 'avartar-f';
+                                    $photo_path = ($photo != '' && file_exists($photo)) ? "/".$users->photo : "/assets/img/" . $avartar . '.png' @endphp
+                                    <img src="{{ $photo_path }}" alt="{{ $users->gender }}" class="img-fluid rounded-circle mb-2" width="128" height="128">
+                                    <h2>{{ $users->firstname . ' ' . $users->lastname }}</h2>
+                                    <h5>{{ $position_details->position_name }}</h5>
+                                    <h5>Last Login: {{ $last_access }}</h5>
+                                    <div class="social-links mt-2">
+                                    </div>
+
+                                </div>
                             </div>
                             <hr class="my-0" />
 
@@ -42,16 +53,31 @@
                                     <table class="table table-sm my-2">
                                         <tbody>
                                             <tr>
-                                                <th>Name</th>
-                                                <td>{{ $users->firstname." ".$users->lastname }}</td>
+                                                <th>Full Name</th>
+                                                <td>
+                                                    {{ $users->firstname . ' ' . $users->lastname }}
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <th>Staff ID</th>
+                                                <td>{{ $users->id }}</td>
                                             </tr>
                                             <tr>
                                                 <th>Role</th>
-                                                <td>{{$users->position_name }}</td>
+                                                <td>{{ $position_details->position_name }}</td>
+                                            </tr>
+                                            <tr>
+                                                <th>Department</th>
+                                                <td>{{ $department_details->display_name }}</td>
                                             </tr>
                                             <tr>
                                                 <th>Gender</th>
-                                                <td>{{ $users->gender }}</td>
+                                                <td>{{ ucfirst($users->gender)  }}</td>
+                                            </tr>
+
+                                            <tr>
+                                                <th>Business</th>
+                                                <td>{{ $business_details->business_name }}</td>
                                             </tr>
                                             <tr>
                                                 <th>Email</th>

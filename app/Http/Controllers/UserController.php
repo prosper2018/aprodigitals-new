@@ -23,6 +23,8 @@ use App\Imports\UsersImport;
 use App\Imports\UsersTemplateImport;
 use Illuminate\Validation\ValidationException;
 use Maatwebsite\Excel\Exceptions\SheetNotFoundException;
+use Carbon\Carbon;
+use Carbon\CarbonInterval;
 
 
 class UserController extends Controller
@@ -274,15 +276,47 @@ class UserController extends Controller
         return view('user.edit', compact('businesses', 'banks', 'departments', 'country_codes', 'religions', 'user', 'position_details'));
     }
 
+    public function formatDate($dateTime)
+    {
+        // Assuming $dateTime is a datetime value
+        $dateTime = Carbon::parse($dateTime);
+
+        // Get the difference as a CarbonInterval object
+        $diff = $dateTime->diff();
+
+        // Find the largest difference
+        $difference = '';
+        if ($diff->y > 0) {
+            $difference = $diff->y . ' years ago';
+        } elseif ($diff->m > 0) {
+            $difference = $diff->m . ' months ago';
+        } elseif ($diff->d > 0) {
+            $difference = $diff->d . ' days ago';
+        } elseif ($diff->h > 0) {
+            $difference = $diff->h . ' hours ago';
+        } elseif ($diff->i > 0) {
+            $difference = $diff->i . ' minutes ago';
+        } elseif ($diff->s > 0) {
+            $difference = $diff->s . ' seconds ago';
+        } elseif ($diff->days >= 7) {
+            $weeks = floor($diff->days / 7);
+            $difference = $weeks . ' weeks ago';
+        }
+
+        return $difference;
+    }
+
+
     public function viewProfile(User $user)
     {
+        $last_access = ($user->last_used == 0) ? '<span class="badge bg-danger">Never Accessed</span>' : $this->formatDate($user->last_used);
         $position_details = Position::select('position_name', 'position_id')->where(['position_id' => $user->position_id])->first();
         $country_codes = CountryCode::all();
         $banks = Bank::all();
         $religions = Religion::all();
-        $businesses = BusinessDetails::select(['id', 'business_name'])->where(['is_deleted' => '0'])->get();
-        $departments = Department::select(['id', 'display_name'])->where(['is_deleted' => '0'])->get();
-        return view('user.profile', compact('businesses', 'banks', 'departments', 'country_codes', 'religions', 'user', 'position_details'));
+        $business_details = BusinessDetails::select(['id', 'business_name'])->where(['id' => $user->business_id])->first();
+        $department_details = Department::select(['id', 'display_name'])->where(['id' => $user->department_id])->first();
+        return view('user.profile', compact('business_details', 'banks', 'department_details', 'country_codes', 'religions', 'user', 'position_details', 'last_access', 'business_details'));
     }
 
 

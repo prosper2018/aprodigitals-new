@@ -5,7 +5,10 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Categories;
 use App\Models\BlogPost;
+use App\Models\BusinessDetails;
 use App\Models\Comments;
+use App\Models\Department;
+use App\Models\Position;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
 
@@ -24,10 +27,17 @@ class DashboardController extends Controller
 
     public function profile()
     {
+        $user_cont = new UserController();
+        $last_access = (auth()->user()->last_used == 0) ? '<span class="badge bg-danger">Never Accessed</span>' : $user_cont->formatDate(auth()->user()->last_used);
+        
+        $position_details = Position::select('position_name', 'position_id')->where(['position_id' => auth()->user()->position_id])->first();
+        $business_details = BusinessDetails::select(['id', 'business_name'])->where(['id' => auth()->user()->business_id])->first();
+        $department_details = Department::select(['id', 'display_name'])->where(['id' => auth()->user()->department_id])->first();
+        
         $users = DB::table('users')->leftJoin('positions', 'users.position_id', '=', 'positions.position_id')
         ->select(['positions.position_name', 'users.*'])->where('users.id', auth()->user()->id)->first();
         
-        return view("profile", ['users'=>$users]);
+        return view("profile", ['users'=>$users, 'position_details' => $position_details, 'last_access' => $last_access, 'business_details' => $business_details, 'department_details' => $department_details]);
     }
 
     /**

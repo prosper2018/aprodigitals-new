@@ -1,4 +1,4 @@
-@extends('layouts.mainlayout')
+@extends('layouts.adminlayout')
 
 @section('title', config("app.name").' - Profile')
 
@@ -7,228 +7,134 @@
 <main class="content">
     <div class="container-fluid p-0">
 
-        <h1 class="h3 mb-3">Profile</h1>
+        <section class="section profile">
 
-        <div class="row">
-            <div class="col-md-4 col-xl-3">
-                <div class="card mb-3">
-                    <div class="card-header">
-                        <h5 class="card-title mb-0">Profile Details</h5>
-                    </div>
-                    <div class="card-body text-center">
-                        <img src="/assets/img/avatars/avatar-4.jpg" alt="Stacie Hall" class="img-fluid rounded-circle mb-2" width="128" height="128" />
-                        <h5 class="card-title mb-0">{{ auth()->user()->firstname." ".auth()->user()->lastname }}</h5>
-                        <div class="text-muted mb-2">{{ $users->position_name }}</div>
-                    </div>
-                    <hr class="my-0" />
+            <div class="row col-12 col-lg-12">
+                <div class="col-12 col-lg-4">
 
+                    <div class="tab">
+                        <div class="tab-content">
+                            <div class="tab-title"><a href="{{ route('admin.users') }}" style="text-decoration: none; font-size:large;"><i class="fas fa-chevron-left"></i> Back</a></div>
+
+                            <h4 class="tab-title py-2">Profile Overview</h4>
+                            <div class="align-items-center text-center" id="content">
+                                @php
+                                $photo = $user->photo;
+                                $gender = $user->gender;
+                                $avartar = ($gender == 'Male' || $gender == 'male' || $gender == 'MALE') ? 'avartar-m' : 'avartar-f';
+                                $photo_path = ($photo != '' && file_exists($photo)) ? "/".$user->photo : "/assets/img/" . $avartar . '.png' @endphp
+                                <img src="{{ $photo_path }}" alt="{{ $user->gender }}" class="img-fluid rounded-circle mb-2" width="128" height="128">
+                                <h2>{{ $user->firstname . ' ' . $user->lastname }}</h2>
+                                <h5>{{ $position_details->position_name }}</h5>
+                                <h5>Last Login: {{ $last_access }}</h5>
+                                <div class="social-links mt-2">
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tab">
+
+                        <div class="tab-content">
+                            <div class="tab-pane active" id="tab-1" role="tabpanel">
+                                <h4 class="tab-title">Login Days</h4>
+                                <table class="table table-sm my-2">
+                                    <tbody>
+                                        <tr>
+                                            <th>Sunday</th>
+                                            <td>@if($user->day_1 == 1) <span class="badge bg-success">Allowed</span> @else <span class="badge bg-danger">Not Allowed</span> @endif</td>
+                                        </tr>
+                                        <tr>
+                                            <th>Monday</th>
+                                            <td>@if($user->day_2 == 1) <span class="badge bg-success">Allowed</span> @else <span class="badge bg-danger">Not Allowed</span> @endif</td>
+                                        </tr>
+                                        <tr>
+                                            <th>Tuesday</th>
+                                            <td>@if($user->day_3 == 1) <span class="badge bg-success">Allowed</span> @else <span class="badge bg-danger">Not Allowed</span> @endif</td>
+                                        </tr>
+                                        <tr>
+                                            <th>Wednesday</th>
+                                            <td>@if($user->day_4 == 1) <span class="badge bg-success">Allowed</span> @else <span class="badge bg-danger">Not Allowed</span> @endif</td>
+                                        </tr>
+
+                                        <tr>
+                                            <th>Thursday</th>
+                                            <td>@if($user->day_5 == 1) <span class="badge bg-success">Allowed</span> @else <span class="badge bg-danger">Not Allowed</span> @endif</td>
+                                        </tr>
+                                        <tr>
+                                            <th>Friday</th>
+                                            <td>@if($user->day_6 == 1) <span class="badge bg-success">Allowed</span> @else <span class="badge bg-danger">Not Allowed</span> @endif</td>
+                                        </tr>
+                                        <tr>
+                                            <th>Saturday</th>
+                                            <td>@if($user->day_7 == 1) <span class="badge bg-success">Allowed</span> @else <span class="badge bg-danger">Not Allowed</span> @endif</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+
+                        </div>
+                    </div>
                 </div>
-            </div>
+                <div class="col-12 col-lg-8">
 
-            <div class="col-md-8 col-xl-9">
-                <!-- <div class="card"> -->
-                <!-- <div class="col-12 col-lg-6"> -->
-                <div class="tab">
-                    <ul class="nav nav-tabs" role="tablist">
-                        <li class="nav-item"><a class="nav-link active" href="#tab-1" data-bs-toggle="tab" role="tab">Profile</a></li>
-                        <li class="nav-item"><a class="nav-link" href="#tab-2" data-bs-toggle="tab" role="tab">Edit Profile</a></li>
-                        <li class="nav-item"><a class="nav-link" href="#tab-3" data-bs-toggle="tab" role="tab">Change Password</a></li>
-                    </ul>
-                    <div class="tab-content">
-                        <div class="tab-pane active" id="tab-1" role="tabpanel">
-                            <h4 class="tab-title">Details</h4>
-                            <table class="table table-sm my-2">
-                                <tbody>
-                                    <tr>
-                                        <th>Name</th>
-                                        <td>{{ $users->firstname." ".$users->lastname }}</td>
-                                    </tr>
-                                    <tr>
-                                        <th>Role</th>
-                                        <td>{{$users->position_name }}</td>
-                                    </tr>
-                                    <tr>
-                                        <th>Gender</th>
-                                        <td>{{ $users->gender }}</td>
-                                    </tr>
-                                    <tr>
-                                        <th>Email</th>
-                                        <td>{{ $users->email }}</td>
-                                    </tr>
-                                    <tr>
-                                        <th>Phone</th>
-                                        <td>{{ $users->mobile_phone }}</td>
-                                    </tr>
-                                    <tr>
-                                        <th>Status</th>
-                                        <td>@switch($users->user_disabled)
-                                            @case(1)
-                                            <span class="badge bg-danger">Disabled</span>
-                                            @break
+                    <div class="tab">
 
-                                            @case(0)
-                                            <span class="badge bg-success">Active</span>
-                                            @break
+                        <div class="tab-content">
+                            <div class="tab-pane active" id="tab-1" role="tabpanel">
+                                <h4 class="tab-title">Profile Details</h4>
+                                <table class="table table-sm my-2">
+                                    <tbody>
+                                        <tr>
+                                            <th>Full Name</th>
+                                            <td>
+                                                {{ $user->firstname . ' ' . $user->lastname }}
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <th>Staff ID</th>
+                                            <td>{{ $user->id }}</td>
+                                        </tr>
+                                        <tr>
+                                            <th>Role</th>
+                                            <td>{{ $position_details->position_name }}</td>
+                                        </tr>
+                                        <tr>
+                                            <th>Department</th>
+                                            <td>{{ $department_details->display_name }}</td>
+                                        </tr>
+                                        <tr>
+                                            <th>Gender</th>
+                                            <td>{{ ucfirst($user->gender)  }}</td>
+                                        </tr>
 
-                                            @default
-                                            <span class="badge bg-danger">Undefined</span>
-                                            @endswitch
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                        <div class="tab-pane" id="tab-2" role="tabpanel">
-                            <h4 class="tab-title">Profile Update</h4>
-
-                            <form method="POST" action="{{ route('user.store') }}">
-                                @csrf
-
-                                <div class="row mb-3">
-                                    <label for="name" class="col-md-4 col-form-label text-md-end">{{ __('User Name') }}</label>
-
-                                    <div class="col-md-6">
-                                        <input id="name" type="text" class="form-control @error('username') is-invalid @enderror" name="username" value="{{ old('username') }}" required autocomplete="username" autofocus>
-
-                                        @error('username')
-                                        <span class="invalid-feedback" role="alert">
-                                            <strong>{{ $message }}</strong>
-                                        </span>
-                                        @enderror
-                                    </div>
-                                </div>
-                                <div class="row mb-3">
-                                    <label for="firstname" class="col-md-4 col-form-label text-md-end">{{ __('First Name') }}</label>
-
-                                    <div class="col-md-6">
-                                        <input id="firstname" type="text" class="form-control @error('firstname') is-invalid @enderror" name="firstname" value="{{ old('firstname') }}" required autocomplete="firstname" autofocus>
-
-                                        @error('firstname')
-                                        <span class="invalid-feedback" role="alert">
-                                            <strong>{{ $message }}</strong>
-                                        </span>
-                                        @enderror
-                                    </div>
-                                </div>
-                                <div class="row mb-3">
-                                    <label for="lastname" class="col-md-4 col-form-label text-md-end">{{ __('Last Name') }}</label>
-
-                                    <div class="col-md-6">
-                                        <input id="lastname" type="text" class="form-control @error('lastname') is-invalid @enderror" name="lastname" value="{{ old('lastname') }}" required autocomplete="lastname" autofocus>
-
-                                        @error('lastname')
-                                        <span class="invalid-feedback" role="alert">
-                                            <strong>{{ $message }}</strong>
-                                        </span>
-                                        @enderror
-                                    </div>
-                                </div>
-                                <div class="row mb-3">
-                                    <label for="mobile_phone" class="col-md-4 col-form-label text-md-end">{{ __('Phone Number') }}</label>
-
-                                    <div class="col-md-6">
-                                        <input id="mobile_phone" type="text" class="form-control @error('mobile_phone') is-invalid @enderror" name="mobile_phone" value="{{ old('mobile_phone') }}" required autocomplete="mobile_phone" autofocus>
-
-                                        @error('mobile_phone')
-                                        <span class="invalid-feedback" role="alert">
-                                            <strong>{{ $message }}</strong>
-                                        </span>
-                                        @enderror
-                                    </div>
-                                </div>
-
-                                <div class="row mb-3">
-                                    <label for="email" class="col-md-4 col-form-label text-md-end">{{ __('Email Address') }}</label>
-
-                                    <div class="col-md-6">
-                                        <input id="email" type="email" class="form-control @error('email') is-invalid @enderror" name="email" value="{{ old('email') }}" required autocomplete="email">
-
-                                        @error('email')
-                                        <span class="invalid-feedback" role="alert">
-                                            <strong>{{ $message }}</strong>
-                                        </span>
-                                        @enderror
-                                    </div>
-                                </div>
-
-
-                                <div class="row mb-3">
-                                    <label for="gender" class="col-md-4 col-form-label text-md-end">{{ __('Gender') }}</label>
-
-                                    <div class="col-md-6">
-                                        <select class="form-control select @error('gender') is-invalid @enderror" name="gender" id="gender">
-                                            <option value="">::select option::</option>
-                                            <option value="Male">Male</option>
-                                            <option value="Female">Female</option>
-                                        </select>
-                                        @error('gender')
-                                        <span class="invalid-feedback" role="alert">
-                                            <strong>{{ $message }}</strong>
-                                        </span>
-                                        @enderror
-                                    </div>
-                                </div>
-
-                                <div class="row mb-3">
-                                    <div class="col-md-6 offset-md-4">
-                                        <button type="submit" class="btn btn-primary">
-                                            {{ __('Update') }}
-                                        </button>
-                                    </div>
-                                </div>
-                            </form>
-                        </div>
-
-                        <div class="tab-pane" id="tab-3" role="tabpanel">
-                            <h4 class="tab-title">One more</h4>
-                            <div class="row mb-3">
-                                <label for="password" class="col-md-4 col-form-label text-md-end">{{ __('Current Password') }}</label>
-
-                                <div class="col-md-6">
-                                    <input id="password" type="password" class="form-control @error('password') is-invalid @enderror" name="password" required autocomplete="new-password">
-
-                                    @error('password')
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                                    @enderror
-                                </div>
-                            </div>
-                            <div class="row mb-3">
-                                <label for="password" class="col-md-4 col-form-label text-md-end">{{ __('New Password') }}</label>
-
-                                <div class="col-md-6">
-                                    <input id="password" type="password" class="form-control @error('password') is-invalid @enderror" name="password" required autocomplete="new-password">
-
-                                    @error('password')
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                                    @enderror
-                                </div>
+                                        <tr>
+                                            <th>Business</th>
+                                            <td>{{ $business_details->business_name }}</td>
+                                        </tr>
+                                        <tr>
+                                            <th>Email</th>
+                                            <td>{{ $user->email }}</td>
+                                        </tr>
+                                        <tr>
+                                            <th>Phone</th>
+                                            <td>{{ $user->mobile_phone }}</td>
+                                        </tr>
+                                        <tr>
+                                            <th>Status</th>
+                                            <td>@if($user->user_disabled == 0)  <span class="badge bg-success">Active</span> @else <span class="badge bg-danger">Disabled</span> @endif </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
                             </div>
 
-                            <div class="row mb-3">
-                                <label for="password-confirm" class="col-md-4 col-form-label text-md-end">{{ __('Confirm Password') }}</label>
-
-                                <div class="col-md-6">
-                                    <input id="password-confirm" type="password" class="form-control" name="password_confirmation" required autocomplete="new-password">
-                                </div>
-                            </div>
-                            <div class="row mb-3">
-                                <div class="col-md-6 offset-md-4">
-                                    <button type="submit" class="btn btn-primary">
-                                        {{ __('Change') }}
-                                    </button>
-                                </div>
-                            </div>
                         </div>
                     </div>
                 </div>
 
             </div>
-        </div>
 
+        </section>
     </div>
 </main>
 
