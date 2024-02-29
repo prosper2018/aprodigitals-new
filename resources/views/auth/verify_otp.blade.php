@@ -55,6 +55,7 @@
                                         @endif
 
                                         <div class="text-center mt-3">
+                                            <a href="{{ route('otp.resend') }}" class="btn btn-lg btn-warning">Resend OTP</a> &nbsp;&nbsp;
                                             <button type="submit" class="btn btn-lg btn-primary">Verify OTP</button>
                                         </div>
                                     </form>

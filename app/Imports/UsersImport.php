@@ -22,24 +22,27 @@ class UsersImport implements ToCollection, WithStartRow
 {
     protected $startRow = 5; // Specify the row number from which the data starts
 
-    private $sheetName;
+    protected $sheetName;
 
     protected $ipAddress;
 
     public function __construct($ipAddress, $sheetName)
     {
         $this->ipAddress = $ipAddress;
-        $this->sheetName = $sheetName;
+        $this->sheetName = $sheetName; 
     }
+
+    
 
     /**
      * @param Collection $collection
      */
     public function collection(Collection $collection)
-    {
-        $errors = [];
+    { 
         try {
             foreach ($collection as $key => $row) {
+                
+                $errors = [];
 
                 $data_row = ($this->startRow + $key);
 
@@ -271,10 +274,4 @@ class UsersImport implements ToCollection, WithStartRow
     {
         return $this->startRow;
     }
-
-    public function onlySheets(): array
-    {
-        return [$this->sheetName]; // Specify the sheet name to read
-    }
-
 }

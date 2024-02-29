@@ -5,7 +5,7 @@
       <li data-target="#carouselExampleIndicators" data-slide-to="1"></li>
       <li data-target="#carouselExampleIndicators" data-slide-to="2"></li>
     </ol>
-    <div class="carousel-inner" role="listbox" style="">
+    <div class="carousel-inner" role="listbox">
       <!-- Slide One - Set the background image for this slide in the line below -->
       <div class="carousel-item active" style="background-image: url('assets/img/slide1.jpg')">
         <div class="carousel-caption  d-md-block">
@@ -15,7 +15,7 @@
       </div>
       <!-- Slide Two - Set the background image for this slide in the line below -->
       <div class="carousel-item" style="background-image: url('assets/img/slide2.jpg')">
-        <div class="carousel-caption  d-md-block" style="">
+        <div class="carousel-caption  d-md-block">
           <h2 class="display-4"><b>APRO DIGITAL SERVICES</b></h2>
           <p class="lead"><b>ICT at its best</b></p>
         </div>

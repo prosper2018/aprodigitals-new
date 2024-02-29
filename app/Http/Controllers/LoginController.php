@@ -379,6 +379,40 @@ class LoginController extends Controller
         }
     }
 
+    public function resendOtp(Request $request)
+    {
+        if (!Auth::user()) {
+            return redirect()->route('login')->with('error', 'Your session has expired. Please, kindly login again to receive a new OTP');
+        }
+
+        $secretKey = rand(100000, 999999);
+
+        $user = User::find(auth()->user()->id);
+        $user->update(['mfa_otp' => $secretKey, 'otp_generated_at' => NOW(), 'otp_verified' => false]);
+
+        $appName = env("APP_NAME");
+
+        // Send verification email
+        $email_message = '<p>Hello ' . $user->lastname . ',</p>
+        
+            <p>You have requested to verify your account. Please use the following one-time password (OTP) to complete the verification process:</p>
+        
+            <p style="font-size: 24px; font-weight: bold; padding: 10px 20px; background-color: #f5f5f5; border: 1px solid #ddd; border-radius: 5px;">' . $secretKey . '</p>
+        
+            <p>This OTP is valid for a single use and should not be shared with anyone for security reasons.</p>
+        
+            <p>If you did not request this OTP, please disregard this email.</p>
+        
+            <p>Thank you for using our service.</p>
+        
+            <p>Best regards,<br>
+            ' . $appName . '</p>';
+
+        $user->notify(new SendOTPEmailNotification($email_message));
+
+        return redirect()->route('otp.verify.form')->with('success', 'A new OTP has been sent to your email address. Kindly enter the OTP to proceed.');
+    }
+
     private function updateLastAccess($username)
     {
         User::where(['username' => $username])->update([
@@ -515,7 +549,7 @@ class LoginController extends Controller
         }
 
         if ($otp === $storedOtp) {
-           
+
             User::find(auth()->user()->id)->update([
                 'otp_verified' => true
             ]);

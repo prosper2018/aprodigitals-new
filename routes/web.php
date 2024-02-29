@@ -101,6 +101,7 @@ Route::get('/resend-activation', [LoginController::class, 'resendMail'])->name('
 Route::post('/resend-activation-mail', [LoginController::class, 'resendActivationMail'])->name('resend.activation.mail');
 Route::get('/otp-verification', [LoginController::class, 'otpForm'])->name('otp.verify.form');
 Route::post('/otp-verify', [LoginController::class, 'verifyOtp'])->name('otp.verify');
+Route::get('/otp-resend', [LoginController::class, 'resendOtp'])->name('otp.resend');
 Route::get('/contact', [\App\Http\Controllers\SendEmailController::class, 'index'])->name('contact');
 Route::post('/contact/send', [\App\Http\Controllers\SendEmailController::class, 'send'])->name('contact.email');
 

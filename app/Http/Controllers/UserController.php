@@ -19,8 +19,10 @@ use App\Http\Controllers\ThirdPartyApiController;
 use App\Notifications\SendVerificationEmailNotification;
 use Illuminate\Support\Facades\Storage;
 use Maatwebsite\Excel\Facades\Excel;
-use App\Imports\UsersImport; 
+use App\Imports\UsersImport;
+use App\Imports\UsersTemplateImport;
 use Illuminate\Validation\ValidationException;
+use Maatwebsite\Excel\Exceptions\SheetNotFoundException;
 
 
 class UserController extends Controller
@@ -179,7 +181,7 @@ class UserController extends Controller
             'bank_account_name' => $request->bank_account_name,
             'firstname' => $request->firstname,
             'lastname' => $request->lastname,
-            'display_name' => $request->lastname.' '.$request->firstname,
+            'display_name' => $request->lastname . ' ' . $request->firstname,
             'mobile_phone' => $request->mobile_phone,
             'passchg_logon' => isset($request->passchg_logon) ? 1 : 0,
             'user_locked' => isset($request->user_locked) ? 1 : 0,
@@ -394,7 +396,7 @@ class UserController extends Controller
             'bank_account_name' => $request->bank_account_name,
             'firstname' => $request->firstname,
             'lastname' => $request->lastname,
-            'display_name' => $request->lastname.' '.$request->firstname,
+            'display_name' => $request->lastname . ' ' . $request->firstname,
             'mobile_phone' => $request->mobile_phone,
             'passchg_logon' => isset($request->passchg_logon) ? 1 : 0,
             'user_locked' => isset($request->user_locked) ? 1 : 0,
@@ -429,8 +431,12 @@ class UserController extends Controller
         }
 
         try {
-            Excel::import(new UsersImport($request->ip(), 1), $request->file('template_file'));
-
+            try {
+                Excel::import(new UsersTemplateImport($request->ip(), 'template'), $request->file('template_file'));
+            } catch (SheetNotFoundException $e) {
+                $errors = $e->getMessage();
+                return redirect()->back()->withErrors($errors)->withInput();
+            }
             return redirect()->back()->with('success', 'Users imported successfully.');
         } catch (ValidationException $e) {
             $errors = $e->validator->errors();
