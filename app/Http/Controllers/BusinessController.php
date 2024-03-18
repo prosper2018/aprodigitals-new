@@ -66,7 +66,8 @@ class BusinessController extends Controller
     public function viewAllBusiness(Request $request)
     {
         $data = BusinessDetails::query()
-            ->select('business_details.*', DB::raw('(SELECT COUNT(business_id) FROM users WHERE users.business_id = business_details.id) AS total_staff'), DB::raw('(SELECT COUNT(business_id) FROM users WHERE users.business_id = business_details.id AND status NOT IN(1) AND is_deleted NOT IN(1)) AS total_active_staff'), DB::raw('(SELECT SUM(current_salary) FROM users WHERE users.business_id = business_details.id AND status NOT IN(1) AND is_deleted NOT IN(1)) AS total_salary'));
+            ->select('business_details.*', DB::raw('(SELECT COUNT(business_id) FROM users WHERE users.business_id = business_details.id) AS total_staff'), DB::raw('(SELECT COUNT(business_id) FROM users WHERE users.business_id = business_details.id AND status NOT IN(1) AND is_deleted NOT IN(1)) AS total_active_staff'), DB::raw('(SELECT SUM(current_salary) FROM users WHERE users.business_id = business_details.id AND status NOT IN(1) AND is_deleted NOT IN(1)) AS total_salary'))
+            ->whereNull('deleted_at');
 
         // Apply search filter if search term is provided
         if ($request->has('business_name')) {

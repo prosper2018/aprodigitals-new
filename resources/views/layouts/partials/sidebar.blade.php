@@ -50,7 +50,27 @@
                     <span class="badge badge-sidebar-primary"></span>
                 </a>
                 <ul id="staff_payroll" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
-                    <li class="sidebar-item"><a class="sidebar-link" href="{{ route('admin.comments') }}">Manage Comments</a></li>
+                    <li class="sidebar-item"><a class="sidebar-link" href="{{ route('payroll.overview') }}">Payroll Overview</a></li>
+                    <li class="sidebar-item"><a class="sidebar-link" href="{{ route('admin.comments') }}">Salary Adjustment</a></li>
+                    <li class="sidebar-item"><a class="sidebar-link" href="{{ route('admin.comments') }}">Adjustments</a></li>
+                    <li class="sidebar-item"><a class="sidebar-link" href="{{ route('admin.comments') }}">Salary Increment</a></li>
+                    <li class="sidebar-item"><a class="sidebar-link" href="{{ route('admin.comments') }}">Salary Increment History</a></li>
+                    <li class="sidebar-item"><a class="sidebar-link" href="{{ route('admin.comments') }}">Allowances</a></li>
+                    <li class="sidebar-item"><a class="sidebar-link" href="{{ route('admin.comments') }}">Staff Allowance</a></li>
+                    <li class="sidebar-item"><a class="sidebar-link" href="{{ route('admin.comments') }}">Staff Allowance List</a></li>
+                    <li class="sidebar-item"><a class="sidebar-link" href="{{ route('admin.comments') }}">Deductions</a></li>
+                    <li class="sidebar-item"><a class="sidebar-link" href="{{ route('admin.comments') }}">Staff Deduction</a></li>
+                    <li class="sidebar-item"><a class="sidebar-link" href="{{ route('admin.comments') }}">Staff Deductions List</a></li>
+                    <li class="sidebar-item"><a class="sidebar-link" href="{{ route('loans.types') }}">Loan Types</a></li>
+                    <li class="sidebar-item"><a class="sidebar-link" href="{{ route('loans.setup') }}">New Loan Application</a></li>
+                    <li class="sidebar-item"><a class="sidebar-link" href="{{ route('admin.comments') }}">Loan Repayments</a></li>
+                    <li class="sidebar-item"><a class="sidebar-link" href="{{ route('admin.comments') }}">Manage Loan Application</a></li>
+                    <li class="sidebar-item"><a class="sidebar-link" href="{{ route('admin.comments') }}">Loan Repayment Reschedule</a></li>
+                    <li class="sidebar-item"><a class="sidebar-link" href="{{ route('admin.comments') }}">Loan Applications</a></li>
+                    <li class="sidebar-item"><a class="sidebar-link" href="{{ route('admin.comments') }}">Active Loans</a></li>
+                    <li class="sidebar-item"><a class="sidebar-link" href="{{ route('admin.comments') }}">Staff Loan Repayment</a></li>
+                    <li class="sidebar-item"><a class="sidebar-link" href="{{ route('payroll.setup-form') }}">Payroll Setup</a></li>
+                    <li class="sidebar-item"><a class="sidebar-link" href="{{ route('payroll.payroll-list') }}">Payroll List</a></li>
                 </ul>
             </li>
             <li class="sidebar-item">

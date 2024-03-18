@@ -477,4 +477,30 @@ class UserController extends Controller
             return redirect()->back()->withErrors($errors)->withInput();
         }
     }
+
+
+    public function getStaffByDept(Request $request)
+    {
+        $sess_position_id = auth()->user()->position_id;
+        $filter = ' 1 = 1';
+
+        if ($sess_position_id != '100' && $sess_position_id != '200') {
+            $filter = " AND is_management_staff NOT IN('1')";
+        }
+
+        $staff = User::whereNull('status')
+            ->orWhere('status', '')
+            ->where('department_id', $request->dept_id)
+            ->where('position_id', '!=', 100)
+            ->whereRaw($filter)
+            ->orderBy('firstname', 'ASC')
+            ->get(['id', 'firstname', 'lastname']);
+
+        $saff_id = $staff->pluck('id')->toArray();
+        $staff_name = $staff->map(function ($item) {
+            return $item['firstname'] . ' ' . $item['lastname'];
+        })->toArray();
+
+        return response()->json(['option_id' => $saff_id, 'option_value' => $staff_name]);
+    }
 }

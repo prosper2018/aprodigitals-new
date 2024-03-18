@@ -6,19 +6,21 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Position extends Model
+class Payrolls extends Model
 {
-    use HasFactory, SoftDeletes;
+    use HasFactory;
+
+    use SoftDeletes;
 
     protected $fillable = [
-        'position_id',
-        'position_name',
-        'position_enabled',
-        'created',
-        'requires_login',
+        'ref_no',
+        'date_from',
+        'date_to',
+        'payroll_type',
+        'status',
         'posted_user',
         'posted_ip',
         'posted_userid',
-        'is_deleted',
+        'is_deleted'
     ];
 }

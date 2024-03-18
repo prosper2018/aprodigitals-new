@@ -6,7 +6,10 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ForgotPasswordController;
 use App\Http\Controllers\ResetPasswordController;
 use App\Http\Controllers\BusinessController;
+use App\Http\Controllers\LoansController;
+use App\Http\Controllers\PayrollOverviewController;
 use App\Http\Controllers\RoleController;
+use App\Http\Controllers\PayrollController;
 use App\Http\Controllers\UserController;
 
 /*
@@ -52,6 +55,7 @@ Route::middleware(['system_admin', 'ensureOtpVerified'])->group(function () {
    Route::post('/admin/categories/apply', [\App\Http\Controllers\CategoriesController::class, 'applyAction'])->name('category.apply');
 
    Route::get('/user', [UserController::class, 'index'])->name('user.form');
+   Route::get('/users-department', [UserController::class, 'getStaffByDept'])->name('user.department');
    Route::get('/user/create', [UserController::class, 'create'])->name('user.register');
    Route::post('/user/store', [UserController::class, 'store'])->name('user.store');
    Route::get('/admin/users/list', [UserController::class, 'viewall'])->name('admin.users');
@@ -63,8 +67,8 @@ Route::middleware(['system_admin', 'ensureOtpVerified'])->group(function () {
    Route::get('/users-template', function () {
       $pathToFile = public_path('templates/users_data_template.xlsx'); // Adjust the path and filename as needed
       return response()->download($pathToFile, 'users_data_template.xlsx');
-  })->name('users.template');
-  
+   })->name('users.template');
+
 
 
    Route::get('/positions', [RoleController::class, 'index'])->name('positions.index');
@@ -82,6 +86,27 @@ Route::middleware(['system_admin', 'ensureOtpVerified'])->group(function () {
    Route::get('/businesses/{business}/edit', [BusinessController::class, 'edit'])->name('businesses.edit'); //shows edit form
    Route::put('/businesses/{id}', [BusinessController::class, 'update'])->name('businesses.update');
    Route::post('/businesses/delete', [BusinessController::class, 'delete'])->name('businesses.delete');
+
+
+   Route::get('payroll-overview', [PayrollOverviewController::class, 'index'])->name('payroll.overview');
+   Route::get('payroll/setup', [PayrollController::class, 'index'])->name('payroll.setup-form');
+   Route::post('payroll-setup}', [PayrollController::class, 'payrollSetup'])->name('payroll.setup-store');
+   Route::get('payroll/{id}/edit', [PayrollController::class, 'edit'])->name('payroll.setup-edit');
+   Route::put('payroll/{id}', [PayrollController::class, 'payrollUpdate'])->name('payroll.setup-update');
+   Route::get('payroll', [PayrollController::class, 'payrollList'])->name('payroll.payroll-list');
+   Route::post('payroll/delete', [PayrollController::class, 'deletePayroll'])->name('payroll.delete');
+
+
+   Route::get('loan/types', [LoansController::class, 'loanTypes'])->name('loans.types');;
+   Route::post('loan/types', [LoansController::class, 'loanTypeSetup'])->name("loans.types.store");
+   Route::get('loan/types/viewall', [LoansController::class, 'viewallLoanTypes'])->name('loans.types.viewall');
+   Route::get('loan/{id}/types', [LoansController::class, 'editloanTypes'])->name("loans.types.edit");
+   Route::put('loan/{id}/types', [LoansController::class, 'loanTypeUpdate'])->name("loans.types.update");
+   Route::post('loan/types/delete', [LoansController::class, 'deleteLoanTypes'])->name('loans.types.delete');
+
+   Route::get('loan/setup', [LoansController::class, 'loanSetupForm'])->name('loans.setup');;
+   Route::post('loan/setup', [LoansController::class, 'loanApplicationSetup'])->name("loans.setup.store");
+   Route::post('loan/manage', [LoansController::class, 'loanSetup'])->name("loans.setup.store");
 });
 
 
