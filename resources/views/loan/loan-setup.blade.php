@@ -6,7 +6,7 @@
 
 <div class="container-fluid py-4">
 
-    <h1 class="h3 mb-3">Staff Deduction</h1>
+    <h1 class="h3 mb-3">Staff Loan Application Form</h1>
 
     <div class="row">
         <div class="col-12">

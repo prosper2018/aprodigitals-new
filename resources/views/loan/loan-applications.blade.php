@@ -4,7 +4,7 @@
 
 @section('content')
 
-<div class="main_content_iner ">
+<div class="main_content_iner py-4">
 
     <div class="main-container">
         <div class="pd-ltr-20 xs-pd-20-10">
@@ -34,7 +34,6 @@
                                         <option value="pending">Pending</option>
                                         <option value="approved">Approved</option>
                                         <option value="rejected">Rejected</option>
-                                        <option value="deleted">Deleted</option>
                                         <input type="hidden" id="id">
                                         <input class="ids" type="hidden" id="ids" name="ids[]" value="" />
                                     </select>
@@ -42,7 +41,7 @@
 
                                 <div class="col-sm-12 col-lg-2 col-md-2 py-4">
                                     <label for="search">&nbsp;</label>
-                                    <button id="apply_manage_loan_filter" class="btn btn-primary btn-block"><span class="fa fa-search"></span></button>
+                                    <button id="apply_loan_applications_filter" class="btn btn-primary btn-block"><span class="fa fa-search"></span></button>
                                 </div>
                             </div>
                             <!--  -->
@@ -56,24 +55,13 @@
                     <div class="card">
                         <div class="card-header">
                             <h3 class="card-title">Loan Applications</h3>
-                            <div class="white_box_tittle text-right col-md-4" style="float: right;">
 
-                                &nbsp;&nbsp;&nbsp;
-                                <button type="button" class="btn btn-outline-success dropdown-toggle" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="float: right;"><i class="fa fa-cog" aria-hidden="true"></i></button>
-                                <div class="dropdown-menu dropdown-menu-right b-none contact-menu">
-                                    <a class="dropdown-item" href="#!" onclick="loanActions('approve')"><i class="icofont icofont-edit"></i>Approve</a>
-                                    <a class="dropdown-item" href="#!" onclick="loanActions('delete')"><i class="icofont icofont-ui-delete"></i>Delete</a>
-                                    <a class="dropdown-item" href="#!" onclick="loanActions('reject')"><i class="icofont icofont-eye-alt"></i>Reject</a>
-                                </div>
-
-                            </div>
                         </div>
                         <div class="card-body">
-                            <table id="manage-loans" class="table table-striped" style="width:100%">
+                            <table id="loan-loanapplications" class="table table-striped" style="width:100%">
                                 <thead>
                                     <tr>
-                                        <th scope="col">S/N</th>
-                                        <th><label class="form-label"> All</label> <br><input type="checkbox" name="select_all" id="selectAllBoxes"></th>
+                                    <th scope="col">S/N</th>
                                         <th scope="col"></th>
                                         <th scope="col">name</th>
                                         <th scope="col">Loan Ref</th>
@@ -116,13 +104,13 @@
                 <h5 class="modal-title">Enter Rejection Reason and click proceed </h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <form autocomplete="off" id="form1" class="form-material" method = "POST" action="{{ route('loans.manage.single-action') }}">
+            <form autocomplete="off" id="form1" class="form-material" method="POST" action="{{ route('loans.manage.single-action') }}">
                 @csrf
                 <div class="modal-body m-3">
                     <div class="row">
 
+                        <input name="type" value="" id="type" type="hidden">
                         <input name="rejected_id" value="" id="rejected_id" type="hidden">
-                        <input name="type" value="reject" id="type" type="hidden">
 
                         <div class="form-outline">
                             <label class="form-label" for="textAreaExample3">Reason For Rejection </label>
@@ -140,6 +128,7 @@
                         </div>
                         <div class="mb-3 col-md-6">
                             <input class="btn btn-lg btn-warning" type="button" value="Back" data-bs-dismiss="modal" aria-label="Close" />
+
                         </div>
                     </div>
                 </div>

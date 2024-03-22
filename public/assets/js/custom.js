@@ -315,3 +315,32 @@ $(function() {
         }
     });
 });
+
+function getActionLabel(action, receipient, action_type = "multiple") {
+    var label = "",
+        action_number = (action_type == "multiple") ? "all" : "";
+
+    switch (action) {
+        case "approve":
+            label =
+                "By clicking OK, you are approving " +
+                action_number +
+                " the selected "+receipient+" Application(s)!";
+            break;
+        case "reject":
+            label =
+                "Are you sure you want to reject " +
+                action_number +
+                " the selected "+receipient+" Application(s)?  Click OK to Enter your reason.";
+            break;
+        case "delete":
+            label =
+                "By clicking OK, you are deleting " +
+                action_number +
+                " the selected "+receipient+" Application(s)!";
+            break;
+        default:
+            label = "Are you sure you want to perform this action?";
+    }
+    return label;
+}

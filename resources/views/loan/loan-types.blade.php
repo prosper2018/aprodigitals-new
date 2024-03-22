@@ -17,7 +17,7 @@
                             Loan Types Form
                         </div>
                         <div class="card-body">
-                            
+
                             <div class="form-group">&nbsp;
                                 <label class="control-label">Loan type</label>
                                 <input name="display_name" type="text" id="display_name" value="{{ old('display_name') }}" class="form-control" required>

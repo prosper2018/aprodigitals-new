@@ -64,9 +64,9 @@
                     <li class="sidebar-item"><a class="sidebar-link" href="{{ route('loans.types') }}">Loan Types</a></li>
                     <li class="sidebar-item"><a class="sidebar-link" href="{{ route('loans.setup') }}">New Loan Application</a></li>
                     <li class="sidebar-item"><a class="sidebar-link" href="{{ route('admin.comments') }}">Loan Repayments</a></li>
-                    <li class="sidebar-item"><a class="sidebar-link" href="{{ route('admin.comments') }}">Manage Loan Application</a></li>
+                    <li class="sidebar-item"><a class="sidebar-link" href="{{ route('loans.manage.list') }}">Manage Loan Application</a></li>
                     <li class="sidebar-item"><a class="sidebar-link" href="{{ route('admin.comments') }}">Loan Repayment Reschedule</a></li>
-                    <li class="sidebar-item"><a class="sidebar-link" href="{{ route('admin.comments') }}">Loan Applications</a></li>
+                    <li class="sidebar-item"><a class="sidebar-link" href="{{ route('loans.applications') }}">Loan Applications</a></li>
                     <li class="sidebar-item"><a class="sidebar-link" href="{{ route('admin.comments') }}">Active Loans</a></li>
                     <li class="sidebar-item"><a class="sidebar-link" href="{{ route('admin.comments') }}">Staff Loan Repayment</a></li>
                     <li class="sidebar-item"><a class="sidebar-link" href="{{ route('payroll.setup-form') }}">Payroll Setup</a></li>

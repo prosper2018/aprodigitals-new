@@ -1,4 +1,137 @@
 <script>
+    var loanapplications;
+    $(function() {
+
+        loanapplications = $('#loan-loanapplications').DataTable({
+            responsive: true,
+            processing: true,
+            serverSide: true,
+            select: {
+                style: "os",
+                selector: "td:first-child",
+            },
+            className: "dt-body-center dt-head-center",
+            ajax: {
+                url: "{{ route('loans.applications') }}",
+                data: function(d) {
+                    d.start_date = $('#start_date').val();
+                    d.end_date = $('#end_date').val();
+                    d.filter_type = $('select#filter_type').children('option:selected').val();
+                }
+            },
+            columns: [{
+                    data: null,
+                    searchable: false,
+                    orderable: false,
+                    render: function(data, type, row, meta) {
+                        return meta.row + 1;
+                    }
+                },
+                {
+                    data: 'photo',
+                    searchable: false,
+                    orderable: false,
+                    render: function(data, type, row) {
+                        if (row.photo && row.photo !== '') {
+                            var img = new Image();
+                            img.src = '/' + row.photo;
+
+                            img.onload = function() {
+                                if (this.naturalWidth > 0) {
+                                    return '<img src="' + row.photo + '" alt="Business Logo" width="50px" height="50px">';
+                                } else {
+                                    var avartar = (row.gender == 'Male' || row.gender == 'male' || row.gender == 'MALE') ? 'avartar-m' : 'avartar-f';
+                                    var path = "/assets/img/" + avartar + ".png";
+                                    return '<img src="' + path + '" alt="Business Logo" width="50px" height="50px">';
+                                }
+                            };
+
+                            img.onerror = function() {
+                                var avartar = (row.gender == 'Male' || row.gender == 'male' || row.gender == 'MALE') ? 'avartar-m' : 'avartar-f';
+                                var path = "/assets/img/" + avartar + ".png";
+                                return '<img src="' + path + '" alt="Business Logo" width="50px" height="50px">';
+                            };
+                        } else {
+                            var avartar = (row.gender == 'Male' || row.gender == 'male' || row.gender == 'MALE') ? 'avartar-m' : 'avartar-f';
+                            var path = "/assets/img/" + avartar + ".png";
+                            return '<img src="' + path + '" alt="Business Logo" width="50px" height="50px">';
+                        }
+                    }
+                },
+                {
+                    data: 'display_name',
+                    name: 'users.display_name',
+                    searchable: false
+                },
+                {
+                    data: 'ref_no',
+                    name: 'loan_applications.ref_no'
+                },
+                {
+                    data: 'app_status',
+                    searchable: false,
+                    orderable: false,
+                    render: function(data, type, row) {
+                        if (row.app_status == 300) {
+                            return '<span class="badge bg-danger">Rejected</span>';
+                        } else if (row.app_status == 200) {
+                            return '<span class="badge bg-success">Active</span>';
+                        } else {
+                            return '<span class="badge bg-warning">Pending</span>';
+                        };
+                    }
+                },
+                {
+                    data: 'reason',
+                    name: 'loan_applications.reason'
+                },
+                {
+                    data: 'amount',
+                    searchable: false,
+                    orderable: false,
+                    render: function(data, type, row) {
+                        return number_format(row.amount);
+                    }
+                },
+                {
+                    data: 'submitted_by_name',
+                    searchable: false,
+                    name: 'submitted_by_name'
+                },
+                {
+                    data: 'created_at',
+                    name: 'loan_applications.created_at'
+                },
+                {
+                    data: 'start_date',
+                    name: 'loan_applications.start_date'
+                },
+                {
+                    data: null,
+                    searchable: false,
+                    orderable: false,
+                    render: function(data, type, row) {
+                        var action = '<div class="btn-group col-md-2"><button type="button" class="btn btn-outline-success dropdown-toggle" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fa fa-cog" aria-hidden="true"></i></button><div class="dropdown-menu">';
+
+                        action += (row.app_status == 100) ? '<a class="dropdown-item" href="' + row.id + '/edit">Edit</a>' : '';
+
+                        action += (row.app_status == 100) ? '<a class="dropdown-item" href="javascript:void(0)" onclick="oneLoanActions(' + row.id +
+                            ', \'delete\')">Delete</a>' : '';
+
+                        action += '<a class="dropdown-item" href="' + row.id + '/view">View</a>';
+
+                        action += '</div></div>';
+                        return action;
+                    }
+                },
+            ]
+        });
+    });
+
+    $('#apply_loan_applications_filter').click(function() {
+        loanapplications.ajax.reload(); // Reload the DataTable with the new filter
+    });
+
     var manageloans;
     $(function() {
 
@@ -12,7 +145,7 @@
             },
             className: "dt-body-center dt-head-center",
             ajax: {
-                url: "{{ route('loans.types.viewall') }}",
+                url: "{{ route('loans.manage.list') }}",
                 data: function(d) {
                     d.start_date = $('#start_date').val();
                     d.end_date = $('#end_date').val();
@@ -20,8 +153,12 @@
                 }
             },
             columns: [{
-                    data: 'id',
-                    name: 'blog_posts.id'
+                    data: null,
+                    searchable: false,
+                    orderable: false,
+                    render: function(data, type, row, meta) {
+                        return meta.row + 1;
+                    }
                 },
                 {
                     data: 'id',
@@ -32,52 +169,92 @@
                     orderable: false
                 },
                 {
-                    data: 'name',
-                    name: 'users.name',
-                    searchable: false
-                },
-                {
-                    data: 'title',
-                    name: 'blog_posts.title'
-                },
-                {
-                    data: 'cat_title',
-                    name: 'categories.cat_title'
-                },
-                {
-                    data: 'post_status',
-                    name: 'blog_posts.post_status'
-                },
-                {
-                    data: 'post_image',
+                    data: 'photo',
                     searchable: false,
                     orderable: false,
                     render: function(data, type, row) {
-                        return '<img src="/images/' + row.post_image + '" alt="Post Image" width="50px" height="50px">';
+                        if (row.photo && row.photo !== '') {
+                            var img = new Image();
+                            img.src = '/' + row.photo;
+
+                            img.onload = function() {
+                                if (this.naturalWidth > 0) {
+                                    return '<img src="' + row.photo + '" alt="Business Logo" width="50px" height="50px">';
+                                } else {
+                                    var avartar = (row.gender == 'Male' || row.gender == 'male' || row.gender == 'MALE') ? 'avartar-m' : 'avartar-f';
+                                    var path = "/assets/img/" + avartar + ".png";
+                                    return '<img src="' + path + '" alt="Business Logo" width="50px" height="50px">';
+                                }
+                            };
+
+                            img.onerror = function() {
+                                var avartar = (row.gender == 'Male' || row.gender == 'male' || row.gender == 'MALE') ? 'avartar-m' : 'avartar-f';
+                                var path = "/assets/img/" + avartar + ".png";
+                                return '<img src="' + path + '" alt="Business Logo" width="50px" height="50px">';
+                            };
+                        } else {
+                            var avartar = (row.gender == 'Male' || row.gender == 'male' || row.gender == 'MALE') ? 'avartar-m' : 'avartar-f';
+                            var path = "/assets/img/" + avartar + ".png";
+                            return '<img src="' + path + '" alt="Business Logo" width="50px" height="50px">';
+                        }
                     }
                 },
                 {
-                    data: 'post_tags',
-                    name: 'blog_posts.post_tags'
+                    data: 'display_name',
+                    name: 'users.display_name',
+                    searchable: false
                 },
                 {
-                    data: 'post_comment_count',
-                    name: 'blog_posts.post_comment_count'
+                    data: 'ref_no',
+                    name: 'loan_applications.ref_no'
                 },
                 {
-                    data: 'post_views_count',
-                    name: 'blog_posts.post_views_count'
+                    data: 'app_status',
+                    searchable: false,
+                    orderable: false,
+                    render: function(data, type, row) {
+                        if (row.app_status == 300) {
+                            return '<span class="badge bg-danger">Rejected</span>';
+                        } else if (row.app_status == 200) {
+                            return '<span class="badge bg-success">Active</span>';
+                        } else {
+                            return '<span class="badge bg-warning">Pending</span>';
+                        };
+                    }
+                },
+                {
+                    data: 'reason',
+                    name: 'loan_applications.reason'
+                },
+                {
+                    data: 'amount',
+                    searchable: false,
+                    orderable: false,
+                    render: function(data, type, row) {
+                        return number_format(row.amount);
+                    }
+                },
+                {
+                    data: 'submitted_by',
+                    name: 'loan_applications.submitted_by'
                 },
                 {
                     data: 'created_at',
-                    name: 'blog_posts.created_at'
+                    name: 'loan_applications.created_at'
+                },
+                {
+                    data: 'start_date',
+                    name: 'loan_applications.start_date'
                 },
                 {
                     data: null,
                     searchable: false,
                     orderable: false,
                     render: function(data, type, row) {
-                        return '<a data-id="' + row.id + '" href="/blog/' + row.id + '/page_1" class="edit btn btn-info btn-sm">View</a>&nbsp&nbsp<a data-id="' + row.id + '" href="/blog/' + row.id + '/edit" class="edit btn btn-success btn-sm">Edit</a>&nbsp&nbsp<button data-id="' + row.id + '" class="delete  btn btn-danger btn-sm" onclick="delete_post(this)">Delete</button>';
+                        return '<div class="btn-group col-md-2"><button type="button" class="btn btn-outline-success dropdown-toggle" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fa fa-cog" aria-hidden="true"></i></button><div class="dropdown-menu"><a class="dropdown-item" href="javascript:void(0)" onclick="oneLoanActions(' + row.id +
+                            ', \'approve\')">Approve</a><a class="dropdown-item" href="javascript:void(0)" onclick="oneLoanActions(' + row.id +
+                            ', \'delete\')">Delete</a><a class="dropdown-item" href="javascript:void(0)" onclick="oneLoanActions(' + row.id +
+                            ', \'reject\')">Reject</a><a class="dropdown-item" href="' + row.id + '/view">View</a></div></div>';
                     }
                 },
             ]
@@ -88,6 +265,143 @@
         manageloans.ajax.reload(); // Reload the DataTable with the new filter
     });
 
+
+    function oneLoanActions(ref, action_type) {
+
+        var action = action_type.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
+        if (ref == "") {
+            Swal.fire({
+                text: "You have not selected any record, please select a record!",
+                icon: "info",
+            });
+        } else {
+            var label = getActionLabel(action_type, "Loan", "single");
+            jQuery(function validation() {
+                Swal.fire({
+                    title: action + "?",
+                    text: label,
+                    icon: "warning",
+                    showCloseButton: true,
+                    showCancelButton: true,
+                }).then((willDelete) => {
+                    if (willDelete.isConfirmed) {
+                        if (action_type == "reject") {
+                            $("#rejected_id").val(ref);
+                            $("#confirmRejecton").modal("show");
+                        } else {
+                            $.ajax({
+                                url: "{{ route('loans.manage.single-action') }}",
+                                type: "POST",
+                                data: {
+                                    ids: ref,
+                                    type: action_type,
+                                },
+                                dataType: "json",
+                                beforeSend: function() {
+                                    $.blockUI({
+                                        message: '<img src="/assets/img/loading.gif" alt=""/>&nbsp;&nbsp;processing request please wait . . .',
+                                    });
+                                },
+                                success: function(response) {
+                                    manageloans.ajax.reload();
+                                    loanapplications.ajax.reload();
+                                    $.unblockUI();
+                                    if (response.response_code == 0) {
+                                        Swal.fire("Success", response.response_message, "success");
+                                    } else {
+                                        Swal.fire("Error", response.response_message, "warning");
+                                    }
+                                },
+                                error: function(response) {
+                                    $.unblockUI();
+                                    manageloans.ajax.reload();
+                                    loanapplications.ajax.reload();
+                                    Swal.fire(
+                                        "Error",
+                                        "Something went wrong..... Please try agian!",
+                                        "error"
+                                    );
+                                },
+                            });
+                        }
+                    } else {}
+                });
+            });
+        }
+    }
+
+    function loanActions(action_type) {
+
+        var action = action_type.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
+        var ids = [];
+        $(".checkid").each(function() {
+            if ($(this).is(":checked")) {
+                ids.push($(this).val());
+            }
+        });
+        $(".ids").val(ids).serialize();
+        var id = $(".ids").val();
+
+        if (id == "") {
+            Swal.fire({
+                text: "You have not selected any record, please select a record!",
+                icon: "info",
+            });
+        } else {
+            var label = getActionLabel(action_type, "Loan");
+            jQuery(function validation() {
+                Swal.fire({
+                    title: action + "?",
+                    text: label,
+                    icon: "warning",
+                    showCloseButton: true,
+                    showCancelButton: true,
+                }).then((willDelete) => {
+                    if (willDelete.isConfirmed) {
+                        if (action_type == "reject") {
+                            $("#rejected_id").val(id);
+                            $("#confirmRejecton").modal("show");
+                        } else {
+                            $.ajax({
+                                url: "{{ route('loans.manage.multi-action') }}",
+                                type: "POST",
+                                data: {
+                                    ids: id,
+                                    type: action_type,
+                                },
+                                dataType: "json",
+                                beforeSend: function() {
+                                    $.blockUI({
+                                        message: '<img src="assets/img/loading.gif" alt=""/>&nbsp;&nbsp;processing request please wait . . .',
+                                    });
+                                },
+                                success: function(response) {
+                                    $.unblockUI();
+                                    manageloans.ajax.reload();
+                                    loanapplications.ajax.reload();
+                                    if (response.response_code == 0) {
+                                        Swal.fire("Success", response.response_message, "success");
+                                    } else {
+                                        Swal.fire("Error", response.response_message, "warning");
+                                    }
+                                },
+                                error: function(response) {
+                                    $.unblockUI();
+                                    manageloans.ajax.reload();
+                                    loanapplications.ajax.reload();
+                                    Swal.fire(
+                                        "Error",
+                                        "Something went wrong..... Please try agian!",
+                                        "error"
+                                    );
+                                },
+                            });
+                        }
+                    } else {}
+                });
+            });
+        }
+    }
 
     var loantypes;
     $(function() {
@@ -109,8 +423,12 @@
                 }
             },
             columns: [{
-                    data: 'id',
-                    name: 'loan_types.id'
+                    data: null,
+                    searchable: false,
+                    orderable: false,
+                    render: function(data, type, row, meta) {
+                        return meta.row + 1;
+                    }
                 },
                 {
                     data: 'display_name',
@@ -215,8 +533,12 @@
                 }
             },
             columns: [{
-                    data: 'id',
-                    name: 'payrolls.id'
+                    data: null,
+                    searchable: false,
+                    orderable: false,
+                    render: function(data, type, row, meta) {
+                        return meta.row + 1;
+                    }
                 },
                 {
                     data: 'ref_no',
@@ -455,8 +777,12 @@
                 }
             },
             columns: [{
-                    data: 'id',
-                    name: 'business_details.id'
+                    data: null,
+                    searchable: false,
+                    orderable: false,
+                    render: function(data, type, row, meta) {
+                        return meta.row + 1;
+                    }
                 },
                 {
                     data: 'business_name',
@@ -545,8 +871,12 @@
             className: "dt-body-center dt-head-center",
             ajax: "{{ route('admin.users') }}",
             columns: [{
-                    data: 'id',
-                    name: 'users.id'
+                    data: null,
+                    searchable: false,
+                    orderable: false,
+                    render: function(data, type, row, meta) {
+                        return meta.row + 1;
+                    }
                 },
                 {
                     data: 'username',
@@ -614,8 +944,12 @@
             className: "dt-body-center dt-head-center",
             ajax: "{{ route('admin.categories') }}",
             columns: [{
-                    data: 'id',
-                    name: 'categories.id'
+                    data: null,
+                    searchable: false,
+                    orderable: false,
+                    render: function(data, type, row, meta) {
+                        return meta.row + 1;
+                    }
                 },
                 {
                     data: 'id',
@@ -661,8 +995,12 @@
             className: "dt-body-center dt-head-center",
             ajax: "{{ route('admin.comments') }}",
             columns: [{
-                    data: 'id',
-                    name: 'comments.id'
+                    data: null,
+                    searchable: false,
+                    orderable: false,
+                    render: function(data, type, row, meta) {
+                        return meta.row + 1;
+                    }
                 },
                 {
                     data: 'id',
@@ -728,8 +1066,12 @@
             className: "dt-body-center dt-head-center",
             ajax: "{{ route('admin.blog') }}",
             columns: [{
-                    data: 'id',
-                    name: 'blog_posts.id'
+                    data: null,
+                    searchable: false,
+                    orderable: false,
+                    render: function(data, type, row, meta) {
+                        return meta.row + 1;
+                    }
                 },
                 {
                     data: 'id',

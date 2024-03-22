@@ -97,16 +97,22 @@ Route::middleware(['system_admin', 'ensureOtpVerified'])->group(function () {
    Route::post('payroll/delete', [PayrollController::class, 'deletePayroll'])->name('payroll.delete');
 
 
-   Route::get('loan/types', [LoansController::class, 'loanTypes'])->name('loans.types');;
+   Route::get('loan/types', [LoansController::class, 'loanTypes'])->name('loans.types');
    Route::post('loan/types', [LoansController::class, 'loanTypeSetup'])->name("loans.types.store");
    Route::get('loan/types/viewall', [LoansController::class, 'viewallLoanTypes'])->name('loans.types.viewall');
    Route::get('loan/{id}/types', [LoansController::class, 'editloanTypes'])->name("loans.types.edit");
    Route::put('loan/{id}/types', [LoansController::class, 'loanTypeUpdate'])->name("loans.types.update");
    Route::post('loan/types/delete', [LoansController::class, 'deleteLoanTypes'])->name('loans.types.delete');
 
-   Route::get('loan/setup', [LoansController::class, 'loanSetupForm'])->name('loans.setup');;
+   Route::get('loan/setup', [LoansController::class, 'loanSetupForm'])->name('loans.setup');
    Route::post('loan/setup', [LoansController::class, 'loanApplicationSetup'])->name("loans.setup.store");
-   Route::post('loan/manage', [LoansController::class, 'loanSetup'])->name("loans.setup.store");
+   Route::get('loan/{id}/edit', [LoansController::class, 'loanEditForm'])->name('loans.edit');
+   Route::put('loan/{id}/edit', [LoansController::class, 'loanApplicationEdit'])->name("loans.edit.update");
+   Route::get('loan/{id}/view', [LoansController::class, 'loanApplicationView'])->name("loans.manage.view");
+   Route::get('loan/manage', [LoansController::class, 'loanApplicationList'])->name("loans.manage.list");
+   Route::get('loan/applications', [LoansController::class, 'loanApplications'])->name("loans.applications");
+   Route::post('loan/manage/action', [LoansController::class, 'approveSingleAppliction'])->name("loans.manage.single-action");
+   Route::post('loan/manage/multi-action', [LoansController::class, 'approveSingleAppliction'])->name("loans.manage.multi-action");
 });
 
 
@@ -141,7 +147,7 @@ Route::get('/about', function () {
 
 
 Route::post('/blog/create/post', [\App\Http\Controllers\BlogPostController::class, 'store']); //saves the created post to the databse
-Route::get('/blog/{blogPost}/edit', [\App\Http\Controllers\BlogPostController::class, 'edit'])->name('blog.edit');; //shows edit post form
+Route::get('/blog/{blogPost}/edit', [\App\Http\Controllers\BlogPostController::class, 'edit'])->name('blog.edit'); //shows edit post form
 Route::put('/blog/{blogPost}/edit', [\App\Http\Controllers\BlogPostController::class, 'update']); //commits edited post to the database 
 Route::put('/blog/edit', [\App\Http\Controllers\BlogPostController::class, 'update'])->name('admin.blog.edit'); //commits edited post to the database 
 Route::post('/blog/delete', [\App\Http\Controllers\BlogPostController::class, 'delete'])->name('admin.blog.delete'); //deletes post from the database
