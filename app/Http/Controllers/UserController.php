@@ -282,7 +282,7 @@ class UserController extends Controller
         $dateTime = Carbon::parse($dateTime);
 
         // Get the difference as a CarbonInterval object
-        $diff = $dateTime->diff();
+        $diff = $dateTime->diff($dateTime);
 
         // Find the largest difference
         $difference = '';
