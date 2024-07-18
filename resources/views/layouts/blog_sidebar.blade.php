@@ -5,8 +5,11 @@
         <div class="input-group">
             <input type="text" name="search_keyword" class="form-control">
             <span class="input-group-btn">
-                <button class="btn btn-default" name="search_btn" type="submit">
-                    <span class="glyphicon glyphicon-search"></span>
+                <button class="btn btn-primary" name="search_btn" type="submit">
+                    {{-- <span class="glyphicon glyphicon-search"></span> --}}
+                    <span style="width: 24p, height: 24px, fill: #333, cursor: pointer;">
+                        &#128269;
+                    </span>
                 </button>
             </span>
         </div>
@@ -15,7 +18,7 @@
 
 <!-- User Login Form -->
 
-<div class="well">
+{{-- <div class="well">
     <h4>Login</h4>
     <form action="includes/login.php" method="post">
         <div class="form-group">
@@ -29,7 +32,7 @@
         </div>
     </form>
     <h5 class="text-center"><a href="registration.php">Don't Have An Account ??</a></h5>
-</div>
+</div> --}}
 
 <!-- Blog Categories -->
 <div class="well">
@@ -37,8 +40,8 @@
     <div class="row">
         <div class="col-lg-12">
             <ul class="list-unstyled">
-                @foreach($categories as $key => $category)
-                <li><a href='{{ route("blog.category", $category->id) }}'>{{$category->cat_title}}</a></li>
+                @foreach ($categories as $key => $category)
+                    <li><a href='{{ route('blog.category', $category->id) }}'>{{ $category->cat_title }}</a></li>
                 @endforeach
             </ul>
         </div>

@@ -146,17 +146,14 @@ Route::get('/about', function () {
 });
 
 
-Route::post('/blog/create/post', [\App\Http\Controllers\BlogPostController::class, 'store']); //saves the created post to the databse
-Route::get('/blog/{blogPost}/edit', [\App\Http\Controllers\BlogPostController::class, 'edit'])->name('blog.edit'); //shows edit post form
-Route::put('/blog/{blogPost}/edit', [\App\Http\Controllers\BlogPostController::class, 'update']); //commits edited post to the database 
-Route::put('/blog/edit', [\App\Http\Controllers\BlogPostController::class, 'update'])->name('admin.blog.edit'); //commits edited post to the database 
-Route::post('/blog/delete', [\App\Http\Controllers\BlogPostController::class, 'delete'])->name('admin.blog.delete'); //deletes post from the database
-Route::delete('/blog/{blogPost}', [\App\Http\Controllers\BlogPostController::class, 'destroy']); //deletes post from the database
-
-
 Route::get('/services', function () {
    return view('services');
 });
+
+Route::get('/blog', [\App\Http\Controllers\BlogPostController::class, 'index'])->name('blogs');
+Route::get('/blog/{blogPost}/page_{page}', [\App\Http\Controllers\BlogPostController::class, 'show']);
+Route::get('/blog/{blogPost}', [\App\Http\Controllers\BlogPostController::class, 'show_by_category'])->name('blog.category');
+
 
 Route::get('/portfolio', function () {
    return view('portfolio-details');

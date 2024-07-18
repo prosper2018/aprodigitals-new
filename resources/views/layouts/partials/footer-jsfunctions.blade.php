@@ -38,23 +38,32 @@
 
                             img.onload = function() {
                                 if (this.naturalWidth > 0) {
-                                    return '<img src="' + row.photo + '" alt="Business Logo" width="50px" height="50px">';
+                                    return '<img src="' + row.photo +
+                                        '" alt="Business Logo" width="50px" height="50px">';
                                 } else {
-                                    var avartar = (row.gender == 'Male' || row.gender == 'male' || row.gender == 'MALE') ? 'avartar-m' : 'avartar-f';
+                                    var avartar = (row.gender == 'Male' || row.gender ==
+                                            'male' || row.gender == 'MALE') ? 'avartar-m' :
+                                        'avartar-f';
                                     var path = "/assets/img/" + avartar + ".png";
-                                    return '<img src="' + path + '" alt="Business Logo" width="50px" height="50px">';
+                                    return '<img src="' + path +
+                                        '" alt="Business Logo" width="50px" height="50px">';
                                 }
                             };
 
                             img.onerror = function() {
-                                var avartar = (row.gender == 'Male' || row.gender == 'male' || row.gender == 'MALE') ? 'avartar-m' : 'avartar-f';
+                                var avartar = (row.gender == 'Male' || row.gender ==
+                                        'male' || row.gender == 'MALE') ? 'avartar-m' :
+                                    'avartar-f';
                                 var path = "/assets/img/" + avartar + ".png";
-                                return '<img src="' + path + '" alt="Business Logo" width="50px" height="50px">';
+                                return '<img src="' + path +
+                                    '" alt="Business Logo" width="50px" height="50px">';
                             };
                         } else {
-                            var avartar = (row.gender == 'Male' || row.gender == 'male' || row.gender == 'MALE') ? 'avartar-m' : 'avartar-f';
+                            var avartar = (row.gender == 'Male' || row.gender == 'male' || row
+                                .gender == 'MALE') ? 'avartar-m' : 'avartar-f';
                             var path = "/assets/img/" + avartar + ".png";
-                            return '<img src="' + path + '" alt="Business Logo" width="50px" height="50px">';
+                            return '<img src="' + path +
+                                '" alt="Business Logo" width="50px" height="50px">';
                         }
                     }
                 },
@@ -111,14 +120,19 @@
                     searchable: false,
                     orderable: false,
                     render: function(data, type, row) {
-                        var action = '<div class="btn-group col-md-2"><button type="button" class="btn btn-outline-success dropdown-toggle" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fa fa-cog" aria-hidden="true"></i></button><div class="dropdown-menu">';
+                        var action =
+                            '<div class="btn-group col-md-2"><button type="button" class="btn btn-outline-success dropdown-toggle" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fa fa-cog" aria-hidden="true"></i></button><div class="dropdown-menu">';
 
-                        action += (row.app_status == 100) ? '<a class="dropdown-item" href="' + row.id + '/edit">Edit</a>' : '';
+                        action += (row.app_status == 100) ? '<a class="dropdown-item" href="' +
+                            row.id + '/edit">Edit</a>' : '';
 
-                        action += (row.app_status == 100) ? '<a class="dropdown-item" href="javascript:void(0)" onclick="oneLoanActions(' + row.id +
+                        action += (row.app_status == 100) ?
+                            '<a class="dropdown-item" href="javascript:void(0)" onclick="oneLoanActions(' +
+                            row.id +
                             ', \'delete\')">Delete</a>' : '';
 
-                        action += '<a class="dropdown-item" href="' + row.id + '/view">View</a>';
+                        action += '<a class="dropdown-item" href="' + row.id +
+                        '/view">View</a>';
 
                         action += '</div></div>';
                         return action;
@@ -163,7 +177,8 @@
                 {
                     data: 'id',
                     render: function(data, type, row) {
-                        return '<input type="checkbox" class="checkid" name="selected_loans[]" value="' + row.id + '">';
+                        return '<input type="checkbox" class="checkid" name="selected_loans[]" value="' +
+                            row.id + '">';
                     },
                     searchable: false,
                     orderable: false
@@ -179,23 +194,32 @@
 
                             img.onload = function() {
                                 if (this.naturalWidth > 0) {
-                                    return '<img src="' + row.photo + '" alt="Business Logo" width="50px" height="50px">';
+                                    return '<img src="' + row.photo +
+                                        '" alt="Business Logo" width="50px" height="50px">';
                                 } else {
-                                    var avartar = (row.gender == 'Male' || row.gender == 'male' || row.gender == 'MALE') ? 'avartar-m' : 'avartar-f';
+                                    var avartar = (row.gender == 'Male' || row.gender ==
+                                            'male' || row.gender == 'MALE') ? 'avartar-m' :
+                                        'avartar-f';
                                     var path = "/assets/img/" + avartar + ".png";
-                                    return '<img src="' + path + '" alt="Business Logo" width="50px" height="50px">';
+                                    return '<img src="' + path +
+                                        '" alt="Business Logo" width="50px" height="50px">';
                                 }
                             };
 
                             img.onerror = function() {
-                                var avartar = (row.gender == 'Male' || row.gender == 'male' || row.gender == 'MALE') ? 'avartar-m' : 'avartar-f';
+                                var avartar = (row.gender == 'Male' || row.gender ==
+                                        'male' || row.gender == 'MALE') ? 'avartar-m' :
+                                    'avartar-f';
                                 var path = "/assets/img/" + avartar + ".png";
-                                return '<img src="' + path + '" alt="Business Logo" width="50px" height="50px">';
+                                return '<img src="' + path +
+                                    '" alt="Business Logo" width="50px" height="50px">';
                             };
                         } else {
-                            var avartar = (row.gender == 'Male' || row.gender == 'male' || row.gender == 'MALE') ? 'avartar-m' : 'avartar-f';
+                            var avartar = (row.gender == 'Male' || row.gender == 'male' || row
+                                .gender == 'MALE') ? 'avartar-m' : 'avartar-f';
                             var path = "/assets/img/" + avartar + ".png";
-                            return '<img src="' + path + '" alt="Business Logo" width="50px" height="50px">';
+                            return '<img src="' + path +
+                                '" alt="Business Logo" width="50px" height="50px">';
                         }
                     }
                 },
@@ -251,10 +275,14 @@
                     searchable: false,
                     orderable: false,
                     render: function(data, type, row) {
-                        return '<div class="btn-group col-md-2"><button type="button" class="btn btn-outline-success dropdown-toggle" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fa fa-cog" aria-hidden="true"></i></button><div class="dropdown-menu"><a class="dropdown-item" href="javascript:void(0)" onclick="oneLoanActions(' + row.id +
-                            ', \'approve\')">Approve</a><a class="dropdown-item" href="javascript:void(0)" onclick="oneLoanActions(' + row.id +
-                            ', \'delete\')">Delete</a><a class="dropdown-item" href="javascript:void(0)" onclick="oneLoanActions(' + row.id +
-                            ', \'reject\')">Reject</a><a class="dropdown-item" href="' + row.id + '/view">View</a></div></div>';
+                        return '<div class="btn-group col-md-2"><button type="button" class="btn btn-outline-success dropdown-toggle" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fa fa-cog" aria-hidden="true"></i></button><div class="dropdown-menu"><a class="dropdown-item" href="javascript:void(0)" onclick="oneLoanActions(' +
+                            row.id +
+                            ', \'approve\')">Approve</a><a class="dropdown-item" href="javascript:void(0)" onclick="oneLoanActions(' +
+                            row.id +
+                            ', \'delete\')">Delete</a><a class="dropdown-item" href="javascript:void(0)" onclick="oneLoanActions(' +
+                            row.id +
+                            ', \'reject\')">Reject</a><a class="dropdown-item" href="' + row
+                            .id + '/view">View</a></div></div>';
                     }
                 },
             ]
@@ -307,9 +335,11 @@
                                     loanapplications.ajax.reload();
                                     $.unblockUI();
                                     if (response.response_code == 0) {
-                                        Swal.fire("Success", response.response_message, "success");
+                                        Swal.fire("Success", response.response_message,
+                                            "success");
                                     } else {
-                                        Swal.fire("Error", response.response_message, "warning");
+                                        Swal.fire("Error", response.response_message,
+                                            "warning");
                                     }
                                 },
                                 error: function(response) {
@@ -380,9 +410,11 @@
                                     manageloans.ajax.reload();
                                     loanapplications.ajax.reload();
                                     if (response.response_code == 0) {
-                                        Swal.fire("Success", response.response_message, "success");
+                                        Swal.fire("Success", response.response_message,
+                                            "success");
                                     } else {
-                                        Swal.fire("Error", response.response_message, "warning");
+                                        Swal.fire("Error", response.response_message,
+                                            "warning");
                                     }
                                 },
                                 error: function(response) {
@@ -449,7 +481,12 @@
                     render: function(data, type, row) {
                         var action = '';
 
-                        action = '<a class="btn btn-sm btn-outline-primary edit_loantype" href = "' + row.id + '/types" data-id="' + row.id + '" type="button"><i class="fa fa-edit"></i></a><button class = "btn btn-sm btn-outline-danger remove_loantype" data-id = "' + row.id + '" type = "button" onclick = "deleteLoanTypes(' + row.id + ', \'Payroll\')" ><i class = "fa fa-trash"></i></button >';
+                        action =
+                            '<a class="btn btn-sm btn-outline-primary edit_loantype" href = "' +
+                            row.id + '/types" data-id="' + row.id +
+                            '" type="button"><i class="fa fa-edit"></i></a><button class = "btn btn-sm btn-outline-danger remove_loantype" data-id = "' +
+                            row.id + '" type = "button" onclick = "deleteLoanTypes(' + row.id +
+                            ', \'Payroll\')" ><i class = "fa fa-trash"></i></button >';
 
                         return action;
                     }
@@ -591,15 +628,25 @@
                     render: function(data, type, row) {
                         var action = '';
                         if (row.status == 0) {
-                            action += '<button class="btn btn-sm btn-outline-primary calculate_payroll" data-id="' + row.id +
+                            action +=
+                                '<button class="btn btn-sm btn-outline-primary calculate_payroll" data-id="' +
+                                row.id +
                                 '" type="button" onclick = "calculatePayroll(' + row.id +
                                 ', \'Payroll\', \'Calculate\')" data-id="' + row.id +
                                 '">Calculate</button>';
                         } else {
-                            action += '<a class="btn btn-sm btn-outline-primary view_payroll" href = "payroll/' + row.id + '/view" data-id="' + row.id + '" type="button"><i class="fa fa-eye"></i></a>';
+                            action +=
+                                '<a class="btn btn-sm btn-outline-primary view_payroll" href = "payroll/' +
+                                row.id + '/view" data-id="' + row.id +
+                                '" type="button"><i class="fa fa-eye"></i></a>';
                         }
 
-                        action += (row.status != 2) ? '<a class="btn btn-sm btn-outline-primary edit_payroll" href = "payroll/' + row.id + '/edit" data-id="' + row.id + '" type="button"><i class="fa fa-edit"></i></a><button class = "btn btn-sm btn-outline-danger remove_payroll" data-id = "' + row.id + '" type = "button" onclick = "deletePayroll(' + row.id + ', \'Payroll\')" ><i class = "fa fa-trash"></i></button >' : '';
+                        action += (row.status != 2) ?
+                            '<a class="btn btn-sm btn-outline-primary edit_payroll" href = "payroll/' +
+                            row.id + '/edit" data-id="' + row.id +
+                            '" type="button"><i class="fa fa-edit"></i></a><button class = "btn btn-sm btn-outline-danger remove_payroll" data-id = "' +
+                            row.id + '" type = "button" onclick = "deletePayroll(' + row.id +
+                            ', \'Payroll\')" ><i class = "fa fa-trash"></i></button >' : '';
 
                         return action;
                     }
@@ -739,7 +786,8 @@
         positionSelect.innerHTML = "";
 
         // Make an AJAX request to fetch roles based on selected department
-        fetch('{{ route("get.roles", ["department" => "__department_id"]) }}'.replace('__department_id', selectedDepartment))
+        fetch('{{ route('get.roles', ['department' => '__department_id']) }}'.replace('__department_id',
+                selectedDepartment))
             .then(response => response.json())
             .then(data => {
                 // Clear existing options
@@ -793,7 +841,8 @@
                     searchable: false,
                     orderable: false,
                     render: function(data, type, row) {
-                        return '<img src="/' + row.logo + '" alt="Business Logo" width="50px" height="50px">';
+                        return '<img src="/' + row.logo +
+                            '" alt="Business Logo" width="50px" height="50px">';
                     }
                 },
                 {
@@ -833,7 +882,9 @@
                     searchable: false,
                     orderable: false,
                     render: function(data, type, row) {
-                        return (row.is_deleted == 1) ? '<span class="badge bg-danger">Inactive</span>' : '<span class="badge bg-success">Active</span>';
+                        return (row.is_deleted == 1) ?
+                            '<span class="badge bg-danger">Inactive</span>' :
+                            '<span class="badge bg-success">Active</span>';
                     }
                 },
                 {
@@ -845,8 +896,10 @@
                     searchable: false,
                     orderable: false,
                     render: function(data, type, row) {
-                        return '<a class="btn btn-success" href="/businesses/' + row.id + '/edit">Edit</a>' +
-                            '<button data-id="' + row.id + '" class="btn btn-danger" onclick="delete_business(this)">Delete</button>';
+                        return '<a class="btn btn-success" href="/businesses/' + row.id +
+                            '/edit">Edit</a>' +
+                            '<button data-id="' + row.id +
+                            '" class="btn btn-danger" onclick="delete_business(this)">Delete</button>';
                     }
                 }
             ]
@@ -915,7 +968,10 @@
                     searchable: false,
                     orderable: false,
                     render: function(data, type, row) {
-                        return '<a data-id="' + row.id + '" href="/admin/users/' + row.id + '/edit" class="edit btn btn-success btn-sm">Edit</a>&nbsp;&nbsp;<a data-id="' + row.id + '" href="/admin/users/' + row.id + '/profile-view" class="view btn btn-info btn-sm">View</a>&nbsp;&nbsp;<button data-id="{{ "' + row.id + '"}}" class="delete  btn btn-danger btn-sm" onclick="delete_user(this)">Delete</button>';
+                        return '<a data-id="' + row.id + '" href="/admin/users/' + row.id +
+                            '/edit" class="edit btn btn-success btn-sm">Edit</a>&nbsp;&nbsp;<a data-id="' +
+                            row.id + '" href="/admin/users/' + row.id +
+                            '/profile-view" class="view btn btn-info btn-sm">View</a>&nbsp;&nbsp;<button data-id="{{ "' + row.id + '" }}" class="delete  btn btn-danger btn-sm" onclick="delete_user(this)">Delete</button>';
                     }
                 },
                 {
@@ -954,7 +1010,8 @@
                 {
                     data: 'id',
                     render: function(data, type, row) {
-                        return '<input type="checkbox" class="checkid" name="selected_post[]" value="' + row.id + '">';
+                        return '<input type="checkbox" class="checkid" name="selected_post[]" value="' +
+                            row.id + '">';
                     },
                     searchable: false,
                     orderable: false
@@ -972,7 +1029,8 @@
                     searchable: false,
                     orderable: false,
                     render: function(data, type, row) {
-                        return '<a data-id="' + row.id + '" href="/admin/' + row.id + '/categories" class="edit btn btn-success btn-sm">Edit</a><button data-id="{{ "' + row.id + '"}}" class="delete  btn btn-danger btn-sm" onclick="delete_post(this)">Delete</button>';
+                        return '<a data-id="' + row.id + '" href="/admin/' + row.id +
+                            '/categories" class="edit btn btn-success btn-sm">Edit</a><button data-id="{{ "' + row.id + '" }}" class="delete  btn btn-danger btn-sm" onclick="delete_post(this)">Delete</button>';
                     }
                 },
             ]
@@ -1005,7 +1063,8 @@
                 {
                     data: 'id',
                     render: function(data, type, row) {
-                        return '<input type="checkbox" class="checkid" name="selected_post[]" value="' + row.id + '">';
+                        return '<input type="checkbox" class="checkid" name="selected_post[]" value="' +
+                            row.id + '">';
                     },
                     searchable: false,
                     orderable: false
@@ -1026,7 +1085,8 @@
                     data: 'title',
                     name: 'blog_posts.title',
                     render: function(data, type, row) {
-                        return "<a href='/blog/" + row.comment_post_id + "/page_1'>" + row.title + "</a>"
+                        return "<a href='/blog/" + row.comment_post_id + "/page_1'>" + row
+                            .title + "</a>"
                     }
                 },
                 {
@@ -1042,7 +1102,8 @@
                     searchable: false,
                     orderable: false,
                     render: function(data, type, row) {
-                        return '<button data-id="' + row.id + '" class="delete  btn btn-danger btn-sm" onclick="delete_comment(this)">Delete</button>';
+                        return '<button data-id="' + row.id +
+                            '" class="delete  btn btn-danger btn-sm" onclick="delete_comment(this)">Delete</button>';
                     }
                 },
             ]
@@ -1076,7 +1137,8 @@
                 {
                     data: 'id',
                     render: function(data, type, row) {
-                        return '<input type="checkbox" class="checkid" name="selected_post[]" value="' + row.id + '">';
+                        return '<input type="checkbox" class="checkid" name="selected_post[]" value="' +
+                            row.id + '">';
                     },
                     searchable: false,
                     orderable: false
@@ -1103,7 +1165,8 @@
                     searchable: false,
                     orderable: false,
                     render: function(data, type, row) {
-                        return '<img src="/images/' + row.post_image + '" alt="Post Image" width="50px" height="50px">';
+                        return '<img src="/images/' + row.post_image +
+                            '" alt="Post Image" width="50px" height="50px">';
                     }
                 },
                 {
@@ -1127,7 +1190,12 @@
                     searchable: false,
                     orderable: false,
                     render: function(data, type, row) {
-                        return '<a data-id="' + row.id + '" href="/blog/' + row.id + '/page_1" class="edit btn btn-info btn-sm">View</a>&nbsp&nbsp<a data-id="' + row.id + '" href="/blog/' + row.id + '/edit" class="edit btn btn-success btn-sm">Edit</a>&nbsp&nbsp<button data-id="' + row.id + '" class="delete  btn btn-danger btn-sm" onclick="delete_post(this)">Delete</button>';
+                        return '<a data-id="' + row.id + '" href="/blog/' + row.id +
+                            '/page_1" class="edit btn btn-info btn-sm">View</a>&nbsp&nbsp<a data-id="' +
+                            row.id + '" href="/blog/' + row.id +
+                            '/edit" class="edit btn btn-success btn-sm">Edit</a>&nbsp&nbsp<button data-id="' +
+                            row.id +
+                            '" class="delete  btn btn-danger btn-sm" onclick="delete_post(this)">Delete</button>';
                     }
                 },
             ]
@@ -1287,57 +1355,59 @@
         });
     }
 
+    @if (auth()->check())
+        function delete_post(id) {
 
-    function delete_post(id) {
-
-        jQuery(function validation() {
-            Swal.fire({
-                title: "Delete?",
-                text: "By clicking OK, The selected posts will be Deleted",
-                icon: "warning",
-                buttons: true,
-                deleteMode: true,
-            }).then((willDelete) => {
-                if (willDelete.isConfirmed) {
-                    $.ajax({
-                        url: "{{ route('admin.blog.delete') }}",
-                        type: "POST",
-                        data: {
-                            _token: "{{ csrf_token() }}",
-                            id: id.dataset.id
-                        },
-                        dataType: "json",
-                        beforeSend: function() {
-                            $.blockUI({
-                                message: '<img src="/assets/img/loading.gif" alt=""/>&nbsp;&nbsp;processing request please wait . . .',
-                            });
-                        },
-                        success: function(response) {
-                            $.unblockUI();
-                            if (response.response_code == 0) {
-                                Swal.fire("Success", response.response_message, "success");
+            jQuery(function validation() {
+                Swal.fire({
+                    title: "Delete?",
+                    text: "By clicking OK, The selected posts will be Deleted",
+                    icon: "warning",
+                    buttons: true,
+                    deleteMode: true,
+                }).then((willDelete) => {
+                    if (willDelete.isConfirmed) {
+                        $.ajax({
+                            url: "{{ route('admin.blog.delete') }}",
+                            type: "POST",
+                            data: {
+                                _token: "{{ csrf_token() }}",
+                                id: id.dataset.id
+                            },
+                            dataType: "json",
+                            beforeSend: function() {
+                                $.blockUI({
+                                    message: '<img src="/assets/img/loading.gif" alt=""/>&nbsp;&nbsp;processing request please wait . . .',
+                                });
+                            },
+                            success: function(response) {
+                                $.unblockUI();
+                                if (response.response_code == 0) {
+                                    Swal.fire("Success", response.response_message,
+                                        "success");
+                                    table.draw();
+                                } else {
+                                    Swal.fire("Warning", response.response_message,
+                                        "warning");
+                                    table.draw();
+                                }
+                            },
+                            error: function(response) {
+                                $.unblockUI();
                                 table.draw();
-                            } else {
-                                Swal.fire("Warning", response.response_message, "warning");
-                                table.draw();
-                            }
-                        },
-                        error: function(response) {
-                            $.unblockUI();
-                            table.draw();
-                            Swal.fire(
-                                "Error",
-                                "Action could not be due to unknown error",
-                                "error"
-                            );
+                                Swal.fire(
+                                    "Error",
+                                    "Action could not be due to unknown error",
+                                    "error"
+                                );
 
-                        },
-                    });
-                } else {}
+                            },
+                        });
+                    } else {}
+                });
             });
-        });
-    }
-
+        }
+    @endif
 
 
     function delete_multi_category() {
@@ -1392,10 +1462,12 @@
                             success: function(response) {
                                 $.unblockUI();
                                 if (response.response_code == 0) {
-                                    Swal.fire("Success", response.response_message, "success");
+                                    Swal.fire("Success", response.response_message,
+                                        "success");
                                     categories_table.draw();
                                 } else {
-                                    Swal.fire("Warning", response.response_message, "warning");
+                                    Swal.fire("Warning", response.response_message,
+                                        "warning");
                                     categories_table.draw();
                                 }
                             },
@@ -1481,10 +1553,12 @@
                             success: function(response) {
                                 $.unblockUI();
                                 if (response.response_code == 0) {
-                                    Swal.fire("Success", response.response_message, "success");
+                                    Swal.fire("Success", response.response_message,
+                                        "success");
                                     comments_table.draw();
                                 } else {
-                                    Swal.fire("Warning", response.response_message, "warning");
+                                    Swal.fire("Warning", response.response_message,
+                                        "warning");
                                     comments_table.draw();
                                 }
                             },
@@ -1574,10 +1648,12 @@
                             success: function(response) {
                                 $.unblockUI();
                                 if (response.response_code == 0) {
-                                    Swal.fire("Success", response.response_message, "success");
+                                    Swal.fire("Success", response.response_message,
+                                        "success");
                                     table.draw();
                                 } else {
-                                    Swal.fire("Warning", response.response_message, "warning");
+                                    Swal.fire("Warning", response.response_message,
+                                        "warning");
                                     table.draw();
                                 }
                             },

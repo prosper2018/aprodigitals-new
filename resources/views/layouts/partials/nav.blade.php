@@ -22,7 +22,7 @@
           <a class="nav-link" onMouseOver="this.style.color='#007cc2'" onMouseOut="this.style.color='#201e1f'" href="/contact">Contact Us</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" onMouseOver="this.style.color='#007cc2'" onMouseOut="this.style.color='#201e1f'" href="/blog">Blog</a>
+          <a class="nav-link" onMouseOver="this.style.color='#007cc2'" onMouseOut="this.style.color='#201e1f'" href="{{ route('blogs') }}">Blog</a>
         </li>
         <li class="nav-item">
           <a class="nav-link" onMouseOver="this.style.color='#007cc2'" onMouseOut="this.style.color='#201e1f'" href="{{ route('login') }}"><i class="fa fa-user"></i>Login</a>
