@@ -38,6 +38,9 @@ Route::middleware(['system_admin', 'ensureOtpVerified'])->group(function () {
    Route::post('/blog/views', [\App\Http\Controllers\BlogPostController::class, 'postViews'])->name('blog.views');
    Route::get('/blog/create/post', [\App\Http\Controllers\BlogPostController::class, 'create'])->name('blog.create');
 
+   Route::post('/blog/delete', [\App\Http\Controllers\BlogPostController::class, 'delete'])->name('admin.blog.delete'); //deletes post from the database
+   Route::delete('/blog/{blogPost}', [\App\Http\Controllers\BlogPostController::class, 'destroy']); //deletes post from the database
+
    Route::get('/admin/comments', [\App\Http\Controllers\CommentsController::class, 'index']);
    Route::get('/admin/comments/viewall', [\App\Http\Controllers\CommentsController::class, 'viewall'])->name('admin.comments');
    Route::post('/admin/comments', [\App\Http\Controllers\CommentsController::class, 'store'])->name("comments.store");
