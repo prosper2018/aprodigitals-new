@@ -13,21 +13,24 @@ use App\Http\Controllers\CategoriesController;
 class BlogPostController extends Controller
 {
 
-  
+
     public function index()
     {
+        $recent_blogs = BlogPost::orderBy('created_at', 'desc')->take(5)->get();
+        $categories = Categories::all();
+        $posts = BlogPost::paginate(5); //fetch all blog posts from DB
         if (auth()->user()) {
-            $categories = Categories::all();
-            $posts = BlogPost::paginate(5); //fetch all blog posts from DB
             return view('blog.index', [
                 'posts' => $posts,
                 'categories' => $categories,
+                'recent_blogs' => $recent_blogs,
             ]); //returns the view with posts
         }
-        $categories = Categories::all(); //fetch all blog posts from DB
-        $posts = BlogPost::paginate(5); //fetch all blog posts from DB
+       
         return view('blog.index', [
-            'posts' => $posts, 'categories' => $categories,
+            'posts' => $posts, 
+            'categories' => $categories,
+            'recent_blogs' => $recent_blogs,
         ]); //returns the view with posts
     }
 
@@ -56,14 +59,14 @@ class BlogPostController extends Controller
         return view('blog.view');
     }
 
- 
+
     public function create()
     {
         $categories = Categories::all();
         return view('blog.create', ['categories' => $categories,]);
     }
 
- 
+
     public function store(Request $request)
     {
         $request->validate([
@@ -178,15 +181,16 @@ class BlogPostController extends Controller
     {
         $count = DB::table("blog_posts")->where("post_category_id", $blogPost->id)->get('id');
         $posts = DB::table("blog_posts")->where("post_category_id", $blogPost->id)->paginate(5);
+        $recent_blogs = BlogPost::orderBy('created_at', 'desc')->take(5)->get();
         $count_value = count($count);
         $categories = Categories::all();
         if (auth()->user()) {
             return view('blog.index', [
-                'posts' => $posts, 'categories' => $categories, 'count' => $count_value
+                'posts' => $posts, 'categories' => $categories, 'count' => $count_value, 'recent_blogs' => $recent_blogs
             ]);
         }
         return view('blog.index', [
-            'posts' => $posts, 'categories' => $categories, 'count' => $count_value
+            'posts' => $posts, 'categories' => $categories, 'count' => $count_value, 'recent_blogs' => $recent_blogs
         ]);
     }
 
@@ -201,7 +205,7 @@ class BlogPostController extends Controller
     {
         $coulumn = "page_" . $page;
         $pages = DB::table("blog_posts")->where("id", $blogPost->id)->value($coulumn);
-
+        $recent_blogs = BlogPost::orderBy('created_at', 'desc')->take(5)->get();
         $categories = Categories::all();
         if (auth()->user()) {
             return view('blog.show', [
@@ -209,6 +213,7 @@ class BlogPostController extends Controller
                 'categories' => $categories,
                 'page' => $pages,
                 'page_id' => $page,
+                'recent_blogs' => $recent_blogs
             ]); //returns the view with the post
         }
         return view('blog.show', [
@@ -216,6 +221,7 @@ class BlogPostController extends Controller
             'categories' => $categories,
             'page' => $pages,
             'page_id' => $page,
+            'recent_blogs' => $recent_blogs
         ]); //returns the view with the post
     }
 

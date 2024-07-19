@@ -12,85 +12,70 @@
 
         </div>
     </section><!-- End Breadcrumbs -->
-    <div class="container" style="padding-top: 40px !important;">
+    
+    <!-- ======= Blog Section ======= -->
+    <section id="blog" class="blog">
+        <div class="container" data-aos="fade-up">
 
-        <div class="row">
-            <div class="card col-lg-8 py-3">
-                <div class="card-body">
-                    <div class="col-12 pt-2">
-                        <div class="row">
-                            <div class="col-8">
-                                <h1 class="display-one">Our Blog!</h1>
-                                <p>Enjoy reading our posts. Click on a post to read!</p>
+            <div class="row">
+
+                <div class="col-lg-8 entries">
+                    @if (!empty($count))
+                        <h4>{{ $count }} contents found</h4>
+                    @endif
+
+                    @forelse($posts as $post)
+                        <article class="entry">
+
+                            <div class="entry-img post_views" data-id="{{ $post->id }}">
+                                <img src="images/{{ $post->post_image }}" alt="" class="img-fluid">
                             </div>
-                            @if (auth()->check())
-                                <div class="col-4">
-                                    <p>Create new Post</p>
-                                    <a href="/blog/create/post" class="btn btn-primary btn-sm">Add Post</a>
+
+                            <h2 class="entry-title post_views" data-id="{{ $post->id }}">
+                                <a href="/blog/{{ $post->id }}/page_1">{{ $post->title }}</a>
+                            </h2>
+
+                            <div class="entry-meta  post_views" data-id="{{ $post->id }}  post_views">
+                                <ul>
+                                    <li class="d-flex align-items-center  post_views" data-id="{{ $post->id }}"><i class="bi bi-person"></i> <a
+                                            href="/blog/{{ $post->id }}/page_1">{{ $post->post_author }}</a></li>
+                                    <li class="d-flex align-items-center  post_views" data-id="{{ $post->id }}"><i class="bi bi-clock"></i> <a
+                                            href="/blog/{{ $post->id }}/page_1"><time datetime="{{ $post->created_at }}">{{ date('F d, Y', strtotime($post->created_at)) }}</time></a></li>
+                                    <li class="d-flex align-items-center  post_views" data-id="{{ $post->id }}"><i class="bi bi-eye"></i> <a
+                                            href="/blog/{{ $post->id }}/page_1">{{ $post->post_views_count }} Views</a></li>
+                                    <li class="d-flex align-items-center post_views" data-id="{{ $post->id }}"><i class="bi bi-chat-dots"></i> <a
+                                            href="/blog/{{ $post->id }}/page_1">{{ $post->post_comment_count }} Comments</a></li>
+                                </ul>
+                            </div>
+
+                            <div class="entry-content">
+                                <p class="post_views" data-id="{{ $post->id }}">
+                                    {!! $post->post_content_excerpt !!}
+                                </p>
+                                <div class="read-more post_views" data-id="{{ $post->id }}">
+                                    <a href="/blog/{{ $post->id }}/page_1">Read More</a>
                                 </div>
-                            @endif
-                        </div>
-                        @if (!empty($count))
-                            <h4>{{ $count }} contents found</h4>
-                        @endif
-                        <hr>
-                        @forelse($posts as $post)
-                            <h2 class="post_views" data-id="{{ $post->id }}"><a
-                                    href="/blog/{{ $post->id }}/page_1">{{ $post->title }}</a></h2>
-                            <p class="lead post_views" data-id="{{ $post->id }}">
-                                By <a href="javascript:void()">{{ $post->post_author }}</a>
-                            </p>
-                            <p class="post_views" data-id="{{ $post->id }}"><span
-                                    class="glyphicon glyphicon-time"></span> Posted on
-                                {{ date('d F Y', strtotime($post->created_at)) }} at
-                                {{ date('h:i:sa', strtotime($post->created_at)) }} &nbsp; <i class="icofont-comment"
-                                    style="font-size: 20px;color:#007CC2;">{{ ' ' . $post->post_comment_count }}</i> <i
-                                    class="icofont-eye"
-                                    style="font-size: 20px;color:#007CC2;">{{ ' ' . $post->post_views_count }}</i></p>
-                            <img class="img-responsive" src="images/{{ $post->post_image }}"><br>
-                            <p class="post_views" data-id="{{ $post->id }}">
-                                {!! $post->post_content_excerpt !!} <span>
-                                    <a href="/blog/{{ $post->id }}/page_1"><strong>Read More</strong></a></span>
-                            </p>
-                            <hr>
-
-                        @empty
-                            <p class="text-warning">No blog Posts available</p>
-                        @endforelse
-                        <p class="pagination text-end">{{ $posts->links('pagination::bootstrap-4') }}</p>
-                    </div>
-
-                </div>
-
-            </div>
-
-            <div class="col-md-4">
-                @if (auth()->check())
-                    <div class="card mb-4">
-                        <div class="card-header">{{ __('Menu') }}</div>
-                        <div class="card-body">
-                            <ul class="list-group">
-                                <a href="/admin/blog" class="list-group-item list-group-action">View All</a>
-                                <a href="{{ route('blog.create') }}" class="list-group-item list-group-action">Create</a>
-                            </ul>
-                        </div>
-                    </div>
-                @endif
-
-                @if (count($errors) > 0)
-                    <div class="card mt-5">
-                        <div class="card-body">
-                            <div class="alert alert-danger">
-                                @foreach ($errors->all() as $error)
-                                    <p>{{ $error }}</p>
-                                @endforeach
                             </div>
-                        </div>
+
+                        </article><!-- End blog entry -->
+
+                    @empty
+                        <p class="text-warning">No blog Posts available</p>
+                    @endforelse
+
+                    <div class="blog-pagination">
+
+                        {{ $posts->links('pagination::bootstrap-4') }}
                     </div>
-                @endif
-                @include('layouts.blog_sidebar')
+
+                </div><!-- End blog entries list -->
+
+                <div class="col-lg-4">
+                    @include('layouts.blog_sidebar')
+                </div><!-- End blog sidebar -->
+
             </div>
 
         </div>
-    </div>
+    </section><!-- End Blog Section -->
 @endsection

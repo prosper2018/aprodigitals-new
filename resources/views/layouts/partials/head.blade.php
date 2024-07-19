@@ -24,6 +24,7 @@
   <link href="/assets/vendor/owl.carousel/assets/owl.carousel.min.css" rel="stylesheet">
   <link href="/assets/vendor/aos/aos.css" rel="stylesheet">
   <link href="/assets/select2/dist/css/select2.min.css" rel="stylesheet">
+  <link href="/assets/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
 
   <link rel="stylesheet" href="/assets/sweetalert2/dist/sweetalert2.min.css">
 
