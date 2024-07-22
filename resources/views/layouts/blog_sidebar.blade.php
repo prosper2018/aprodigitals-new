@@ -65,8 +65,8 @@
     <div class="sidebar-item recent-posts">
         @forelse($recent_blogs as $blogs)
             <div class="post-item clearfix">
-                <img src="images/{{ $blogs->post_image }}" alt="">
-                <h4 class="post_views" data-id="{{ $post->id }}"><a href="/blog/{{ $post->id }}/page_1">{{ $blogs->title }}</a></h4>
+                <img src="/images/{{ $blogs->post_image }}" alt="">
+                <h4 class="post_views" data-id="{{ $blogs->id }}"><a href="/blog/{{ $blogs->id }}/page_1">{{ $blogs->title }}</a></h4>
                 <time datetime="{{ $blogs->created_at }}">{{ date("F d, Y", strtotime($blogs->created_at)) }}</time>
             </div>
         @empty

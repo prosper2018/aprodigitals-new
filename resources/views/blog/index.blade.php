@@ -28,7 +28,7 @@
                         <article class="entry">
 
                             <div class="entry-img post_views" data-id="{{ $post->id }}">
-                                <img src="images/{{ $post->post_image }}" alt="" class="img-fluid">
+                                <img src="/images/{{ $post->post_image }}" alt="" class="img-fluid">
                             </div>
 
                             <h2 class="entry-title post_views" data-id="{{ $post->id }}">

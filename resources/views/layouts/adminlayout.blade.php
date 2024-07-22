@@ -22,7 +22,7 @@
             @include('layouts.partials.admin_footer')
         </div>
     </div>
-    @include('layouts.partials.footer-scripts')
+    @include('layouts.partials.admin-footer-scripts')
 </body>
 
 </html>
