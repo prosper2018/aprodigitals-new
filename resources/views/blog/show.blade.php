@@ -12,7 +12,7 @@
 
         </div>
     </section><!-- End Breadcrumbs -->
-    <div class="container" style="padding-top: 40px !important;">
+    {{-- <div class="container" style="padding-top: 40px !important;">
         <div class="row">
             <div class="col-lg-8 pt-2">
 
@@ -85,7 +85,7 @@
             </div>
 
         </div>
-    </div>
+    </div> --}}
 
     <!-- ======= Blog Single Section ======= -->
     <section id="blog" class="blog">
