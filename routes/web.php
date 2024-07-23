@@ -43,7 +43,7 @@ Route::middleware(['system_admin', 'ensureOtpVerified'])->group(function () {
 
    Route::get('/admin/comments', [\App\Http\Controllers\CommentsController::class, 'index']);
    Route::get('/admin/comments/viewall', [\App\Http\Controllers\CommentsController::class, 'viewall'])->name('admin.comments');
-   Route::post('/admin/comments', [\App\Http\Controllers\CommentsController::class, 'store'])->name("comments.store");
+   Route::post('/admin/comments', [\App\Http\Controllers\CommentsController::class, 'store'])->name("admin.comments.store");
    Route::post('/admin/comments/delete', [\App\Http\Controllers\CommentsController::class, 'delete'])->name('admin.comments.delete');
    Route::delete('/admin/{comments}', [\App\Http\Controllers\CommentsController::class, 'destroy']);
    Route::post('/admin/comments/apply', [\App\Http\Controllers\CommentsController::class, 'applyAction'])->name('comment.apply');
@@ -156,7 +156,7 @@ Route::get('/services', function () {
 Route::get('/blog', [\App\Http\Controllers\BlogPostController::class, 'index'])->name('blogs');
 Route::get('/blog/{blogPost}/page_{page}', [\App\Http\Controllers\BlogPostController::class, 'show']);
 Route::get('/blog/{blogPost}', [\App\Http\Controllers\BlogPostController::class, 'show_by_category'])->name('blog.category');
-
+Route::post('/comments', [\App\Http\Controllers\CommentsController::class, 'store'])->name("comments.store");
 
 Route::get('/portfolio', function () {
    return view('portfolio-details');

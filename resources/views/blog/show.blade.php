@@ -107,14 +107,21 @@
 
                         <div class="entry-meta">
                             <ul>
-                                <li class="d-flex align-items-center  post_views" data-id="{{ $post->id }}"><i class="bi bi-person"></i> <a
-                                    href="/blog/{{ $post->id }}/page_1">{{ $post->post_author }}</a></li>
-                            <li class="d-flex align-items-center  post_views" data-id="{{ $post->id }}"><i class="bi bi-clock"></i> <a
-                                    href="/blog/{{ $post->id }}/page_1"><time datetime="{{ $post->created_at }}">{{ date('F d, Y', strtotime($post->created_at)) }}</time></a></li>
-                            <li class="d-flex align-items-center  post_views" data-id="{{ $post->id }}"><i class="bi bi-eye"></i> <a
-                                    href="/blog/{{ $post->id }}/page_1">{{ $post->post_views_count }} Views</a></li>
-                            <li class="d-flex align-items-center post_views" data-id="{{ $post->id }}"><i class="bi bi-chat-dots"></i> <a
-                                    href="/blog/{{ $post->id }}/page_1">{{ $post->post_comment_count }} Comments</a></li>
+                                <li class="d-flex align-items-center  post_views" data-id="{{ $post->id }}"><i
+                                        class="bi bi-person"></i> <a
+                                        href="/blog/{{ $post->id }}/page_1">{{ $post->post_author }}</a></li>
+                                <li class="d-flex align-items-center  post_views" data-id="{{ $post->id }}"><i
+                                        class="bi bi-clock"></i> <a href="/blog/{{ $post->id }}/page_1"><time
+                                            datetime="{{ $post->created_at }}">{{ date('F d, Y', strtotime($post->created_at)) }}</time></a>
+                                </li>
+                                <li class="d-flex align-items-center  post_views" data-id="{{ $post->id }}"><i
+                                        class="bi bi-eye"></i> <a
+                                        href="/blog/{{ $post->id }}/page_1">{{ $post->post_views_count }} Views</a>
+                                </li>
+                                <li class="d-flex align-items-center post_views" data-id="{{ $post->id }}"><i
+                                        class="bi bi-chat-dots"></i> <a
+                                        href="/blog/{{ $post->id }}/page_1">{{ $post->post_comment_count }}
+                                        Comments</a></li>
                             </ul>
                         </div>
 
@@ -132,7 +139,7 @@
                             <p>
                                 {!! $post->page_2 !!}
                             </p>
-                           
+
                         </div>
 
                         <div class="entry-footer">
@@ -143,9 +150,9 @@
 
                             <i class="bi bi-tags"></i>
                             <ul class="tags">
-                                <li><a href="#">Creative</a></li>
-                                <li><a href="#">Tips</a></li>
-                                <li><a href="#">Marketing</a></li>
+                                @for ($i = 0; $i < count($tags); $i++)
+                                    <li><a href="#">{{ $tags[$i] }}</a></li>
+                                @endfor
                             </ul>
                         </div>
 
@@ -300,28 +307,38 @@
                             @endif
                             <form action="{{ route('comments.store') }}" method="POST" enctype="multipart/form-data">
                                 @csrf
+                                <input type="hidden" name="comment_post_id" value="{{ $post->id }}">
                                 <div class="row">
                                     <div class="col-md-6 form-group">
-                                        <input name="name" type="text" class="form-control"
+                                        <input name="comment_author" type="text" class="form-control"
                                             placeholder="Your Name*">
+                                        @error('comment_author')
+                                            <span class="invalid-feedback" role="alert">
+                                                <strong>{{ $message }}</strong>
+                                            </span>
+                                        @enderror
                                     </div>
                                     <div class="col-md-6 form-group">
-                                        <input name="email" type="text" class="form-control"
+                                        <input name="comment_email" type="text" class="form-control"
                                             placeholder="Your Email*">
+                                        @error('comment_email')
+                                            <span class="invalid-feedback" role="alert">
+                                                <strong>{{ $message }}</strong>
+                                            </span>
+                                        @enderror
                                     </div>
                                 </div>
                                 <div class="row">
                                     <div class="col form-group">
-                                        <input name="website" type="text" class="form-control"
-                                            placeholder="Your Website">
+                                        <textarea name="comment_content" class="form-control" placeholder="Your Comment*"></textarea>
+                                        @error('comment_content')
+                                            <span class="invalid-feedback" role="alert">
+                                                <strong>{{ $message }}</strong>
+                                            </span>
+                                        @enderror
                                     </div>
                                 </div>
-                                <div class="row">
-                                    <div class="col form-group">
-                                        <textarea name="comment" class="form-control" placeholder="Your Comment*"></textarea>
-                                    </div>
-                                </div>
-                                <button type="submit" class="btn btn-primary">Post Comment</button>
+                                <button type="submit" name="btn_comment" class="btn btn-primary">Post Comment</button>
 
                             </form>
 

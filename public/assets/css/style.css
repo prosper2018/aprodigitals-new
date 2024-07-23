@@ -2277,7 +2277,7 @@ section {
   
   .blog .blog-comments .reply-form input:focus {
     box-shadow: none;
-    border-color: #f096a7;
+    border-color: #041fb9;
   }
   
   .blog .blog-comments .reply-form textarea {
@@ -2288,7 +2288,7 @@ section {
   
   .blog .blog-comments .reply-form textarea:focus {
     box-shadow: none;
-    border-color: #f096a7;
+    border-color: #0b0ed3;
   }
   
   .blog .blog-comments .reply-form .form-group {
@@ -2299,15 +2299,15 @@ section {
     border-radius: 4px;
     padding: 10px 20px;
     border: 0;
-    background-color: #493c3e;
+    background-color: #0905ca;
   }
   
   .blog .blog-comments .reply-form .btn-primary:hover {
-    background-color: #57484a;
+    background-color: #2806e9;
   }
   
   .blog .blog-pagination {
-    color: #816a6e;
+    color: #0905ca;
   }
   
   .blog .blog-pagination ul {

@@ -207,10 +207,12 @@ class BlogPostController extends Controller
         $pages = DB::table("blog_posts")->where("id", $blogPost->id)->value($coulumn);
         $recent_blogs = BlogPost::orderBy('created_at', 'desc')->take(5)->get();
         $categories = Categories::all();
+        $tags = explode(" ", $blogPost->post_tags);
         if (auth()->user()) {
             return view('blog.show', [
                 'post' => $blogPost,
                 'categories' => $categories,
+                'tags' => $tags,
                 'page' => $pages,
                 'page_id' => $page,
                 'recent_blogs' => $recent_blogs
@@ -219,6 +221,7 @@ class BlogPostController extends Controller
         return view('blog.show', [
             'post' => $blogPost,
             'categories' => $categories,
+            'tags' => $tags,
             'page' => $pages,
             'page_id' => $page,
             'recent_blogs' => $recent_blogs
