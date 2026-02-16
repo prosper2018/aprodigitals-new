@@ -18,7 +18,7 @@
                             <div class="card-body">
                                 <div class="m-sm-4">
                                     <div class="text-center">
-                                        <img src="/assets/img/logo-removebg-preview.png" alt="Chris Wood" class="img-fluid" />
+                                        <img src="/assets/img/logo-removebg-preview.png" alt="Chris Wood" class="img-fluid" width="80%" height="80%" />
                                     </div>
                                     <form method="POST" action="{{ route('login.custom') }}">
                                         @csrf
