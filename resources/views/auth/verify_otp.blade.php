@@ -31,7 +31,7 @@
                             <div class="card-body">
                                 <div class="m-sm-4">
                                     <div class="text-center">
-                                        <img src="/assets/img/logo-removebg-preview.png" alt="Chris Wood" class="img-fluid" width="132" height="132" />
+                                        <img src="/assets/img/logo-removebg-preview.png" alt="Chris Wood" class="img-fluid" width="60%" height="60%" />
                                     </div>
                                     <form action="{{ route('otp.verify') }}" method="post">
                                         @csrf
